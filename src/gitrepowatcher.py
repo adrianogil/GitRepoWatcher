@@ -72,6 +72,48 @@ def update_in_batch(args, extra_args):
         except:
             print("Caught error when updating repo " + str(current_repo))
 
+def move_head_to_upstream(args, extra_args):
+    category='%'
+
+    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
+        category)
+    current_repo = ''
+    index = 0;
+    for row in c:
+        try:
+            index = index + 1
+            print("###################################################")
+            current_repo = str(row[1])
+            print('Repo ' + str(index) + ': Move HEAD to upstream in ' + current_repo)
+            get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
+            get_upstream_command = 'cd "' + str(row[2]) + '" && ' + get_upstream_name
+            upstream = subprocess.check_output(get_upstream_command, shell=True)
+
+            get_unstaged_files = 'git diff --numstat | wc -l'
+            get_unstaged_command = 'cd "' + str(row[2]) + '" && ' + get_unstaged_files
+            unstaged = subprocess.check_output(get_unstaged_command, shell=True)
+            unstaged = unstaged.strip()
+
+            # print(unstaged)
+
+            if unstaged == '0':
+                get_diverge_commits = 'git log origin/master..HEAD --pretty=oneline | wc -l'
+                get_diverge_commits_command = 'cd "' + str(row[2]) + '" && ' + get_diverge_commits
+                diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
+                diverge_commits = diverge_commits.strip()
+
+                if diverge_commits == '0':
+                    move_upstream = ' git reset --hard ' + upstream.strip()
+                    move_upstream_command = 'cd "' + str(row[2]) + '" && ' + move_upstream
+                    move_output = subprocess.check_output(move_upstream_command, shell=True)
+                    print(move_output)
+                else:
+                    print('There are commits to be synced with upstream in repo!')
+            else:
+                print('There are unstaged changes in repo!')
+        except:
+            print("Caught error when handling repo " + str(current_repo))
+
 
 def list_all_saved_repo(args, extra_args):
     c.execute("SELECT * from Repo ORDER BY id_repo")
@@ -87,6 +129,7 @@ commands_parse = {
     '-s'       : save_repo,
     '-u'       : update_in_batch,
     '-l'       : list_all_saved_repo,
+    '-up'      : move_head_to_upstream,
     '--save'   : save_repo,
     '--update' : update_in_batch,
     '--list'   : list_all_saved_repo,

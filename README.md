@@ -29,6 +29,11 @@ repo-watcher --update
 repo-watcher -u
 ```
 
+Move HEAD to upstream in all saved repos.
+```
+repo-watcher -up
+```
+
 
 ## Planned features
 -
