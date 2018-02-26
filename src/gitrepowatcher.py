@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import sys, sqlite3, os, subprocess
 
+import utils
+
 list_args = '--save -s'
 
 # Open Connection
@@ -22,7 +24,17 @@ c.execute('''
     )
 ''')
 
-def save_repo(update_command='git remote update', category='default'):
+def save_repo(args, extra_args):
+    if len(args) == 0:
+        update_command = 'git remote update'
+        category = 'default'
+    elif len(args) == 1:
+        update_command = args[0]
+        category = 'default'
+    elif len(args) >= 2:
+        update_command = args[0]
+        category = args[1]
+
     repo_path = os.getcwd()
     repo_name = os.path.basename(repo_path)
 
@@ -38,7 +50,12 @@ def save_repo(update_command='git remote update', category='default'):
 
     print('Repo saved.')
 
-def update_in_batch(category='%'):
+def update_in_batch(args, extra_args):
+    if len(args) == 0:
+        category='%'
+    elif len(args) > 0:
+        category = args[0]
+
     c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
         category)
     current_repo = ''
@@ -56,7 +73,7 @@ def update_in_batch(category='%'):
             print("Caught error when updating repo " + str(current_repo))
 
 
-def list_all_saved_repo():
+def list_all_saved_repo(args, extra_args):
     c.execute("SELECT * from Repo ORDER BY id_repo")
     index = 0
     for row in c:
@@ -66,16 +83,38 @@ def list_all_saved_repo():
         print('- update command: ' + str(row[4]))
         index = index + 1
 
-if len(sys.argv) == 4:
-    if sys.argv[1] == '--save' or sys.argv[1] == '-s':
-        save_repo(sys.argv[3],sys.argv[2])
-elif len(sys.argv) == 3:
-    if sys.argv[1] == '--save' or sys.argv[1] == '-s':
-        save_repo(sys.argv[2])
-elif len(sys.argv) == 2:
-    if sys.argv[1] == '--save' or sys.argv[1] == '-s':
-        save_repo()
-    elif sys.argv[1] == '--batch' or sys.argv[1] == '-b':
-        update_in_batch()
-    elif sys.argv[1] == '--list' or sys.argv[1] == '-l':
-        list_all_saved_repo()
+commands_parse = {
+    '-s'       : save_repo,
+    '-u'       : update_in_batch,
+    '-l'       : list_all_saved_repo,
+    '--save'   : save_repo,
+    '--update' : update_in_batch,
+    '--list'   : list_all_saved_repo,
+}
+
+def parse_arguments():
+
+    args = {}
+
+    last_key = ''
+
+    for i in xrange(1, len(sys.argv)):
+        a = sys.argv[i]
+        if a[0] == '-' and not utils.is_float(a):
+            last_key = a
+            args[a] = []
+        elif last_key != '':
+            arg_values = args[last_key]
+            arg_values.append(a)
+            args[last_key] = arg_values
+
+    return args
+
+def parse_commands(args):
+    # print('DEBUG: Parsing args: ' + str(args))
+    for a in args:
+        if a in commands_parse:
+            commands_parse[a](args[a], args)
+
+args = parse_arguments()
+parse_commands(args)
