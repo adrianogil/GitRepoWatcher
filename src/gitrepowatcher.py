@@ -29,8 +29,8 @@ def save_repo(args, extra_args):
         update_command = 'git remote update'
         category = 'default'
     elif len(args) == 1:
-        update_command = args[0]
-        category = 'default'
+        category = args[0]
+        update_command = 'git remote update'
     elif len(args) >= 2:
         update_command = args[0]
         category = args[1]
@@ -125,10 +125,23 @@ def list_all_saved_repo(args, extra_args):
         print('- update command: ' + str(row[4]))
         index = index + 1
 
+def delete_saved_repo(args, extra_args):
+    if len(args) == 0:
+        repo_path = os.getcwd()
+        sql_query_delete = "DELETE FROM Repo WHERE repo_path = ?"
+        delete_data = (repo_path,)
+    elif len(args) == 1:
+        id_repo = int(args[0])
+        sql_query_delete = "DELETE FROM Repo WHERE id_repo = ?"
+        delete_data = (id_repo,)
+    c.execute(sql_query_delete, delete_data)
+    conn.commit()
+
 commands_parse = {
     '-s'       : save_repo,
     '-u'       : update_in_batch,
     '-l'       : list_all_saved_repo,
+    '-d'       : delete_saved_repo,
     '-up'      : move_head_to_upstream,
     '--save'   : save_repo,
     '--update' : update_in_batch,

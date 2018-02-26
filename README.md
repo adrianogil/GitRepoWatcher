@@ -34,6 +34,16 @@ Move HEAD to upstream in all saved repos.
 repo-watcher -up
 ```
 
+Delete a saved repo.
+```
+repo-watcher -d <id>
+```
+
+Delete current folder from saved repos.
+```
+repo-watcher -d
+```
+
 
 ## Planned features
 -

@@ -4,3 +4,4 @@
 
 
 alias repo-watcher='python $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
+alias rw='python $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
