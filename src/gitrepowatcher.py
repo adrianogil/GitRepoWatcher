@@ -3,6 +3,8 @@ import sys, sqlite3, os, subprocess
 
 import utils
 
+import gitcommands
+
 list_args = '--save -s'
 
 # Open Connection
@@ -56,8 +58,8 @@ def update_in_batch(args, extra_args):
     elif len(args) > 0:
         category = args[0]
 
-    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
-        category)
+    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",\
+        (category,))
     current_repo = ''
     index = 0;
     for row in c:
@@ -70,10 +72,7 @@ def update_in_batch(args, extra_args):
             update_output = subprocess.check_output(update_command, shell=True)
             print(update_output)
 
-            get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
-            get_upstream_command = 'cd "' + str(row[2]) + '" && ' + get_upstream_name
-            upstream = subprocess.check_output(get_upstream_command, shell=True)
-            upstream = upstream.strip()
+            upstream = gitcommands.get_upstream_name(str(row[2]))
 
             get_diverge_commits = 'git log HEAD..' + upstream + ' --pretty=oneline | wc -l'
             get_diverge_commits_command = 'cd "' + str(row[2]) + '" && ' + get_diverge_commits
@@ -85,10 +84,13 @@ def update_in_batch(args, extra_args):
             print("Caught error when updating repo " + str(current_repo))
 
 def move_head_to_upstream(args, extra_args):
-    category='%'
+    if len(args) == 0:
+        category='%'
+    elif len(args) > 0:
+        category = args[0]
 
     c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
-        category)
+        (category,))
     current_repo = ''
     index = 0;
     for row in c:
