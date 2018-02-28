@@ -69,6 +69,18 @@ def update_in_batch(args, extra_args):
             update_command = 'cd "' + str(row[2]) + '" && ' + str(row[4])
             update_output = subprocess.check_output(update_command, shell=True)
             print(update_output)
+
+            get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
+            get_upstream_command = 'cd "' + str(row[2]) + '" && ' + get_upstream_name
+            upstream = subprocess.check_output(get_upstream_command, shell=True)
+            upstream = upstream.strip()
+
+            get_diverge_commits = 'git log HEAD..' + upstream + ' --pretty=oneline | wc -l'
+            get_diverge_commits_command = 'cd "' + str(row[2]) + '" && ' + get_diverge_commits
+            diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
+            diverge_commits = diverge_commits.strip()
+
+            print(diverge_commits + ' new commits')
         except:
             print("Caught error when updating repo " + str(current_repo))
 
@@ -88,6 +100,7 @@ def move_head_to_upstream(args, extra_args):
             get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
             get_upstream_command = 'cd "' + str(row[2]) + '" && ' + get_upstream_name
             upstream = subprocess.check_output(get_upstream_command, shell=True)
+            upstream = upstream.strip()
 
             get_unstaged_files = 'git diff --numstat | wc -l'
             get_unstaged_command = 'cd "' + str(row[2]) + '" && ' + get_unstaged_files
@@ -97,7 +110,7 @@ def move_head_to_upstream(args, extra_args):
             # print(unstaged)
 
             if unstaged == '0':
-                get_diverge_commits = 'git log origin/master..HEAD --pretty=oneline | wc -l'
+                get_diverge_commits = 'git log ' + upstream + '..HEAD --pretty=oneline | wc -l'
                 get_diverge_commits_command = 'cd "' + str(row[2]) + '" && ' + get_diverge_commits
                 diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
                 diverge_commits = diverge_commits.strip()
