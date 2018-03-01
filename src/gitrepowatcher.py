@@ -72,12 +72,7 @@ def update_in_batch(args, extra_args):
             update_output = subprocess.check_output(update_command, shell=True)
             print(update_output)
 
-            upstream = gitcommands.get_upstream_name(str(row[2]))
-
-            get_diverge_commits = 'git log HEAD..' + upstream + ' --pretty=oneline | wc -l'
-            get_diverge_commits_command = 'cd "' + str(row[2]) + '" && ' + get_diverge_commits
-            diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
-            diverge_commits = diverge_commits.strip()
+            diverge_commits = gitcommands.get_diverge_commits(row[2])
 
             print(diverge_commits + ' new commits')
         except:
