@@ -72,7 +72,7 @@ def update_in_batch(args, extra_args):
             update_output = subprocess.check_output(update_command, shell=True)
             print(update_output)
 
-            diverge_commits = gitcommands.get_diverge_commits(row[2])
+            diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(row[2])
 
             print(diverge_commits + ' new commits')
         except:
@@ -106,11 +106,11 @@ def move_head_to_upstream(args, extra_args):
 
             # print(unstaged)
 
-            if unstaged == '0':
-                get_diverge_commits = 'git log ' + upstream + '..HEAD --pretty=oneline | wc -l'
-                get_diverge_commits_command = 'cd "' + str(row[2]) + '" && ' + get_diverge_commits
-                diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
-                diverge_commits = diverge_commits.strip()
+            diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(row[2])
+            if diverge_commits == '0':
+                print('There are no new commits!')
+            elif unstaged == '0':
+                diverge_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(row[2])
 
                 if diverge_commits == '0':
                     move_upstream = ' git reset --hard ' + upstream.strip()
