@@ -3,5 +3,5 @@
 # source $GIT_REPO_WATCHER_DIR/src/bashrc.sh
 
 
-alias repo-watcher='python $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
-alias rw='python $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
+alias repo-watcher='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
+alias rw='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
