@@ -12,12 +12,12 @@ repo-watcher -s
 Save a repo with category 'default'
 
 ```
-repo-watcher -s <update-command>
+repo-watcher -s <category>
 ```
 
 Save a repo with a specific update command and a category
 ```
-repo-watcher -s <update-command> <category>
+repo-watcher -s <category> <update-command> 
 ```
 
 Update all saved repos. It will can the update command of each registered repo.

@@ -126,7 +126,13 @@ def move_head_to_upstream(args, extra_args):
 
 
 def list_all_saved_repo(args, extra_args):
-    c.execute("SELECT * from Repo ORDER BY id_repo")
+    if len(args) == 0:
+        category='%'
+    elif len(args) > 0:
+        category = args[0]
+
+    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo", 
+        (category,))
     index = 0
     for row in c:
         print('Repo ' + str(index) + ': ' + str(row[1]))
