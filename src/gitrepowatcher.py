@@ -158,7 +158,39 @@ def delete_all_repos(args, extra_args):
     c.execute(sql_query_delete)
     conn.commit()
 
+def verify_changes():
+    if len(args) == 0:
+        category='%'
+    elif len(args) > 0:
+        category = args[0]
+
+    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
+        (category,))
+    current_repo = ''
+    index = 0;
+    for row in c:
+        try:
+            index = index + 1
+            print("###################################################")
+            current_repo = str(row[1])
+            print('Repo ' + str(index) + ': Verify changes in ' + current_repo)
+            get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
+            get_upstream_command = 'cd "' + str(row[2]) + '" && ' + get_upstream_name
+            upstream = subprocess.check_output(get_upstream_command, shell=True)
+            upstream = upstream.strip()
+
+            get_unstaged_files = 'git diff --numstat | wc -l'
+            get_unstaged_command = 'cd "' + str(row[2]) + '" && ' + get_unstaged_files
+            unstaged = subprocess.check_output(get_unstaged_command, shell=True)
+            unstaged = unstaged.strip()
+            if unstaged != '0':
+                print('There are unstaged changes in repo!')
+        except:
+            print("Caught error when handling repo " + str(current_repo))
+
+
 commands_parse = {
+    '-c'           : verify_changes,
     '-s'           : save_repo,
     '-u'           : update_in_batch,
     '-l'           : list_all_saved_repo,
