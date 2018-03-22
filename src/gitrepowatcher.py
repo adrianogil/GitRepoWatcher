@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 import sys, sqlite3, os, subprocess
 
 import utils
@@ -131,7 +131,7 @@ def list_all_saved_repo(args, extra_args):
     elif len(args) > 0:
         category = args[0]
 
-    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo", 
+    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
         (category,))
     index = 0
     for row in c:
@@ -158,7 +158,7 @@ def delete_all_repos(args, extra_args):
     c.execute(sql_query_delete)
     conn.commit()
 
-def verify_changes():
+def verify_changes(args, extra_args):
     if len(args) == 0:
         category='%'
     elif len(args) > 0:
