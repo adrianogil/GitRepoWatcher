@@ -153,15 +153,21 @@ def delete_saved_repo(args, extra_args):
     c.execute(sql_query_delete, delete_data)
     conn.commit()
 
+def delete_all_repos(args, extra_args):
+    sql_query_delete = "DELETE FROM Repo"
+    c.execute(sql_query_delete)
+    conn.commit()
+
 commands_parse = {
-    '-s'       : save_repo,
-    '-u'       : update_in_batch,
-    '-l'       : list_all_saved_repo,
-    '-d'       : delete_saved_repo,
-    '-up'      : move_head_to_upstream,
-    '--save'   : save_repo,
-    '--update' : update_in_batch,
-    '--list'   : list_all_saved_repo,
+    '-s'           : save_repo,
+    '-u'           : update_in_batch,
+    '-l'           : list_all_saved_repo,
+    '-d'           : delete_saved_repo,
+    '-up'          : move_head_to_upstream,
+    '--save'       : save_repo,
+    '--update'     : update_in_batch,
+    '--list'       : list_all_saved_repo,
+    '--delete-all' : delete_all_repos,
 }
 
 def parse_arguments():
