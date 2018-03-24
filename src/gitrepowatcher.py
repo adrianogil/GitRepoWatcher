@@ -166,9 +166,14 @@ def verify_changes(args, extra_args):
 
     c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
         (category,))
+    
     current_repo = ''
     index = 0;
-    for row in c:
+    results = c.fetchall()
+
+    unstaged_repos = []
+    
+    for row in results:
         try:
             index = index + 1
             print("###################################################")
@@ -185,8 +190,19 @@ def verify_changes(args, extra_args):
             unstaged = unstaged.strip()
             if unstaged != '0':
                 print('There are unstaged changes in repo!')
+                unstaged_repos.append(current_repo)
         except:
             print("Caught error when handling repo " + str(current_repo))
+    print("###################################################")
+    
+    total_unstaged = len(unstaged_repos)
+    if total_unstaged == 1:
+        print("Found changes in only 1 repo:")
+    else:
+        print("Found changes in %s repos:" % (total_unstaged,))
+    for u in unstaged_repos:
+        print("  - " + u)
+    print("###################################################")
 
 
 commands_parse = {
