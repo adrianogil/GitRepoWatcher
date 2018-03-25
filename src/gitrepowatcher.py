@@ -296,6 +296,63 @@ def get_commit_stats(args, extra_args):
 
     print('Commits in all repos: ' + str(total_commits_in_all_repos))
 
+def get_repos_from_args(args, extra_args):
+    query_conditions = ''
+    query_data = ()
+
+    query_index = 0
+
+    def add_condition(query_conditions, condition):
+        if query_conditions == '':
+            return condition
+        else:
+            return query_conditions + ' OR ' + condition
+
+    if len(args) == 0:
+        query_conditions = ' repo_category LIKE ? '
+        query_data = ('%',)
+    elif len(args) > 0:
+        for a in args:
+            if utils.is_int(args[0]):
+                conditions = ' id_repo LIKE ? '
+            else:
+                conditions = ' repo_category LIKE ? '
+            query_conditions = add_condition(query_conditions, conditions)
+            query_data = query_data + (a,)
+            query_index = query_index + 1
+
+    
+    sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
+    # print('Debug: ' + sql_query)
+
+    c.execute(sql_query,
+        query_data)
+
+    results = c.fetchall()
+
+    return results
+
+def get_commits_of_today(args, extra_args):
+    results = get_repos_from_args(args, extra_args)
+
+    total_commits_in_all_repos = 0
+
+    for row in results:
+        today_commits_msgs = gitcommands.get_today_commits(row[2])
+        total_today_commits = len(today_commits_msgs)
+        if total_today_commits > 0:
+            print("###################################################")
+            print('Repo %s (Id %s) ' % (row[1],row[0]))    
+            total_commits_in_all_repos = total_commits_in_all_repos + total_today_commits
+            for c in today_commits_msgs:
+                print(c)
+
+    print("###################################################")
+    if len(args) == 0:
+        print('Today, there were generated %s commits in all repos.' % (total_commits_in_all_repos,))
+    else:
+        print('Today, there were generated %s commits in repos.' % (total_commits_in_all_repos,))
+
 commands_parse = {
     '-i'           : get_info,
     '-c'           : verify_changes,
@@ -305,9 +362,10 @@ commands_parse = {
     '-d'           : delete_saved_repo,
     '-up'          : move_head_to_upstream,
     '--save'       : save_repo,
-    '--stats'      : get_commit_stats,
-    '--update'     : update_in_batch,
     '--list'       : list_all_saved_repo,
+    '--stats'      : get_commit_stats,
+    '--today'      : get_commits_of_today,
+    '--update'     : update_in_batch,
     '--delete-all' : delete_all_repos,
 }
 

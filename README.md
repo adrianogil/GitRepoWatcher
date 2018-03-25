@@ -67,8 +67,14 @@ Get commit stats
 repo-watcher --stats
 ```
 
+Get commits from today
+```
+repo-watcher --today
+```
+
 ## Planned features
-- Get commits from today
+- More than one category for repo
+- Refactoring code using DAO
 
 ## Installation
 
