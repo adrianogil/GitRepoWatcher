@@ -62,8 +62,13 @@ Get info about current path
 repo-watcher -i
 ```
 
+Get commit stats
+```
+repo-watcher --stats
+```
+
 ## Planned features
--
+- Get commits from today
 
 ## Installation
 

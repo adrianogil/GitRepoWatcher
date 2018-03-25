@@ -27,3 +27,12 @@ def get_diverge_commits_upstream_to_HEAD(path):
     diverge_commits = diverge_commits.strip()
 
     return diverge_commits
+
+def get_total_commits(path):
+
+    get_total_commits = 'git log HEAD --pretty=oneline | wc -l'
+    get_total_commits_command = 'cd "' + path + '" && ' + get_total_commits
+    total_commits = subprocess.check_output(get_total_commits_command, shell=True)
+    total_commits = total_commits.strip()
+
+    return total_commits

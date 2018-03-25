@@ -233,7 +233,7 @@ def get_info(args, extra_args):
 
     
     sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
-    print('Debug: ' + sql_query)
+    # print('Debug: ' + sql_query)
 
     c.execute(sql_query,
         query_data)
@@ -251,6 +251,51 @@ def get_info(args, extra_args):
     if len(args) == 0 and len(results) == 0:
         print('Current path is not saved as a repo.')
 
+def get_commit_stats(args, extra_args):
+
+    query_conditions = ''
+    query_data = ()
+
+    query_index = 0
+
+    def add_condition(query_conditions, condition):
+        if query_conditions == '':
+            return condition
+        else:
+            return query_conditions + ' OR ' + condition
+
+    if len(args) == 0:
+        query_conditions = ' repo_category LIKE ? '
+        query_data = ('%',)
+    elif len(args) > 0:
+        for a in args:
+            if utils.is_int(args[0]):
+                conditions = ' id_repo LIKE ? '
+            else:
+                conditions = ' repo_category LIKE ? '
+            query_conditions = add_condition(query_conditions, conditions)
+            query_data = query_data + (a,)
+            query_index = query_index + 1
+
+    
+    sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
+    # print('Debug: ' + sql_query)
+
+    c.execute(sql_query,
+        query_data)
+
+    results = c.fetchall()
+
+    total_commits_in_all_repos = 0
+
+    for row in results:
+        print('Repo %s (Id %s) ' % (row[1],row[0]))
+        total_commits = int(gitcommands.get_total_commits(row[2]))
+        print('  Total commits: ' + str(total_commits))
+        total_commits_in_all_repos = total_commits_in_all_repos + total_commits
+
+    print('Commits in all repos: ' + str(total_commits_in_all_repos))
+
 commands_parse = {
     '-i'           : get_info,
     '-c'           : verify_changes,
@@ -260,6 +305,7 @@ commands_parse = {
     '-d'           : delete_saved_repo,
     '-up'          : move_head_to_upstream,
     '--save'       : save_repo,
+    '--stats'      : get_commit_stats,
     '--update'     : update_in_batch,
     '--list'       : list_all_saved_repo,
     '--delete-all' : delete_all_repos,
