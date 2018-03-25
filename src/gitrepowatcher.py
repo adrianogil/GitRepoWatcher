@@ -190,7 +190,7 @@ def verify_changes(args, extra_args):
             unstaged = unstaged.strip()
             if unstaged != '0':
                 print('There are unstaged changes in repo!')
-                unstaged_repos.append(current_repo)
+                unstaged_repos.append({'id' : row[0], 'repo' : current_repo})
         except:
             print("Caught error when handling repo " + str(current_repo))
     print("###################################################")
@@ -201,7 +201,7 @@ def verify_changes(args, extra_args):
     else:
         print("Found changes in %s repos:" % (total_unstaged,))
     for u in unstaged_repos:
-        print("  - " + u)
+        print("  - (ID: %s) %s" % (u['id'], u['repo']))
     print("###################################################")
 
 
