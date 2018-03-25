@@ -57,6 +57,11 @@ repo-watcher -c
 ```
 
 
+Get info about current path
+```
+repo-watcher -i
+```
+
 ## Planned features
 -
 

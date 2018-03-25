@@ -205,7 +205,54 @@ def verify_changes(args, extra_args):
     print("###################################################")
 
 
+def get_info(args, extra_args):
+
+    query_conditions = ''
+    query_data = ()
+
+    query_index = 0
+
+    def add_condition(query_conditions, condition):
+        if query_conditions == '':
+            return condition
+        else:
+            return query_conditions + ' OR ' + condition
+
+    if len(args) == 0:
+        query_conditions = ' repo_path LIKE ? '
+        query_data = (os.getcwd() + '%',)
+    elif len(args) > 0:
+        for a in args:
+            if utils.is_int(args[0]):
+                conditions = ' id_repo LIKE ? '
+            else:
+                conditions = ' repo_category LIKE ? '
+            query_conditions = add_condition(query_conditions, conditions)
+            query_data = query_data + (a,)
+            query_index = query_index + 1
+
+    
+    sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
+    print('Debug: ' + sql_query)
+
+    c.execute(sql_query,
+        query_data)
+    index = 0
+
+    results = c.fetchall()
+
+    for row in results:
+        print('Repo ' + str(index) + ': ' + str(row[1]))
+        print('- path: ' + str(row[2]))
+        print('- category: ' + str(row[3]))
+        print('- update command: ' + str(row[4]))
+        index = index + 1
+
+    if len(args) == 0 and len(results) == 0:
+        print('Current path is not saved as a repo.')
+
 commands_parse = {
+    '-i'           : get_info,
     '-c'           : verify_changes,
     '-s'           : save_repo,
     '-u'           : update_in_batch,
