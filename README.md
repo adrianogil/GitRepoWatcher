@@ -45,6 +45,17 @@ Delete current folder from saved repos.
 repo-watcher -d
 ```
 
+Delete all stored data
+```
+repo-watcher --delete-all
+```
+
+
+Verify changes in repos
+```
+repo-watcher -c
+```
+
 
 ## Planned features
 -
