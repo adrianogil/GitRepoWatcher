@@ -253,38 +253,7 @@ def get_info(args, extra_args):
 
 def get_commit_stats(args, extra_args):
 
-    query_conditions = ''
-    query_data = ()
-
-    query_index = 0
-
-    def add_condition(query_conditions, condition):
-        if query_conditions == '':
-            return condition
-        else:
-            return query_conditions + ' OR ' + condition
-
-    if len(args) == 0:
-        query_conditions = ' repo_category LIKE ? '
-        query_data = ('%',)
-    elif len(args) > 0:
-        for a in args:
-            if utils.is_int(args[0]):
-                conditions = ' id_repo LIKE ? '
-            else:
-                conditions = ' repo_category LIKE ? '
-            query_conditions = add_condition(query_conditions, conditions)
-            query_data = query_data + (a,)
-            query_index = query_index + 1
-
-    
-    sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
-    # print('Debug: ' + sql_query)
-
-    c.execute(sql_query,
-        query_data)
-
-    results = c.fetchall()
+    results = get_repos_from_args(args, extra_args)
 
     total_commits_in_all_repos = 0
 
