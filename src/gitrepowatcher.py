@@ -88,6 +88,9 @@ def move_head_to_upstream(args, extra_args):
         (category,))
     current_repo = ''
     index = 0;
+
+    new_commits = {}
+
     for row in c:
         try:
             index = index + 1
@@ -110,6 +113,7 @@ def move_head_to_upstream(args, extra_args):
             if diverge_commits == '0':
                 print('There are no new commits!')
             elif unstaged == '0':
+                number_new_commits = diverge_commits
                 diverge_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(row[2])
 
                 if diverge_commits == '0':
@@ -117,12 +121,22 @@ def move_head_to_upstream(args, extra_args):
                     move_upstream_command = 'cd "' + str(row[2]) + '" && ' + move_upstream
                     move_output = subprocess.check_output(move_upstream_command, shell=True)
                     print(move_output)
+                    new_commits[row[1]] = number_new_commits
                 else:
                     print('There are commits to be synced with upstream in repo!')
             else:
                 print('There are unstaged changes in repo!')
         except:
             print("Caught error when handling repo " + str(current_repo))
+
+    print("###################################################")
+    total_repo_updated = len(new_commits)
+    if total_repo_updated == 0:
+        print('Not a single repo was updated!')
+    else:
+        print('' + str(total_repo_updated) + ' repo were updated:')
+        for r in new_commits:
+            print(' - ' + r + ': ' + new_commits[r] + ' new commits')
 
 
 def list_all_saved_repo(args, extra_args):
