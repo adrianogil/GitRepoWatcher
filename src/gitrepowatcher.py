@@ -97,10 +97,7 @@ def move_head_to_upstream(args, extra_args):
             print("###################################################")
             current_repo = str(row[1])
             print('Repo ' + str(index) + ': Move HEAD to upstream in ' + current_repo)
-            get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
-            get_upstream_command = 'cd "' + str(row[2]) + '" && ' + get_upstream_name
-            upstream = subprocess.check_output(get_upstream_command, shell=True)
-            upstream = upstream.strip()
+            upstream = gitcommands.get_upstream_name(row[2])
 
             get_unstaged_files = 'git diff --numstat | wc -l'
             get_unstaged_command = 'cd "' + str(row[2]) + '" && ' + get_unstaged_files
