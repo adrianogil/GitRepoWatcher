@@ -5,3 +5,9 @@
 
 alias repo-watcher='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
 alias rw='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
+
+
+function rws()
+{
+    python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py $* | less    
+}
