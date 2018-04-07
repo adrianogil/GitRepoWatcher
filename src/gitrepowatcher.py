@@ -177,13 +177,13 @@ def verify_changes(args, extra_args):
 
     c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
         (category,))
-    
+
     current_repo = ''
     index = 0;
     results = c.fetchall()
 
     unstaged_repos = []
-    
+
     for row in results:
         try:
             index = index + 1
@@ -199,20 +199,28 @@ def verify_changes(args, extra_args):
             get_unstaged_command = 'cd "' + str(row[2]) + '" && ' + get_unstaged_files
             unstaged = subprocess.check_output(get_unstaged_command, shell=True)
             unstaged = unstaged.strip()
+
+            total_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(row[2])
+
             if unstaged != '0':
                 print('There are unstaged changes in repo!')
-                unstaged_repos.append({'id' : row[0], 'repo' : current_repo})
+                unstaged_repos.append({'id' : row[0], 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
+            else:
+                if total_commits != '0':
+                    print('There are commits to be sent to upstream!')
+                    unstaged_repos.append({'id' : row[0], 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
         except:
             print("Caught error when handling repo " + str(current_repo))
     print("###################################################")
-    
+
     total_unstaged = len(unstaged_repos)
     if total_unstaged == 1:
         print("Found changes in only 1 repo:")
     else:
         print("Found changes in %s repos:" % (total_unstaged,))
     for u in unstaged_repos:
-        print("  - (ID: %s) %s" % (u['id'], u['repo']))
+        print("  - (ID: %s) %s - (%s unstaged) (%s commits)" % \
+            (u['id'], u['repo'], u['unstaged'], u['commits']))
     print("###################################################")
 
 
@@ -242,7 +250,7 @@ def get_info(args, extra_args):
             query_data = query_data + (a,)
             query_index = query_index + 1
 
-    
+
     sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
     # print('Debug: ' + sql_query)
 
@@ -301,7 +309,7 @@ def get_repos_from_args(args, extra_args):
             query_data = query_data + (a,)
             query_index = query_index + 1
 
-    
+
     sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
     # print('Debug: ' + sql_query)
 
@@ -322,7 +330,7 @@ def get_commits_of_today(args, extra_args):
         total_today_commits = len(today_commits_msgs)
         if total_today_commits > 0:
             print("###################################################")
-            print('Repo %s (Id %s) ' % (row[1],row[0]))    
+            print('Repo %s (Id %s) ' % (row[1],row[0]))
             total_commits_in_all_repos = total_commits_in_all_repos + total_today_commits
             for c in today_commits_msgs:
                 print(c)
