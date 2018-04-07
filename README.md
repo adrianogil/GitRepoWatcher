@@ -73,8 +73,9 @@ repo-watcher --today
 ```
 
 ## Planned features
-- More than one category for repo
 - Refactoring code using DAO
+- More than one category for repo
+- Add a excluding category
 
 ## Installation
 
