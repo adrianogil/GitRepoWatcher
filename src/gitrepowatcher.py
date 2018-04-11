@@ -341,6 +341,23 @@ def get_commits_of_today(args, extra_args):
     else:
         print('Today, there were generated %s commits in repos.' % (total_commits_in_all_repos,))
 
+def execute_batch_command(args, extra_args):
+    if len(args) == 2:
+        results = get_repos_from_args([args[0]], extra_args)
+        command_batch = args[1]
+    elif len(args) == 1:
+        results = get_repos_from_args([], extra_args)
+        command_batch = args[0]
+    else:
+        return
+
+    for row in results:
+        repo_command = 'cd "' + str(row[2]) + '" && ' + command_batch
+        repo_command_output = subprocess.check_output(repo_command, shell=True)
+        repo_command_output = repo_command_output.strip()
+
+        print(repo_command_output)
+
 commands_parse = {
     '-i'           : get_info,
     '-c'           : verify_changes,
@@ -349,6 +366,7 @@ commands_parse = {
     '-l'           : list_all_saved_repo,
     '-d'           : delete_saved_repo,
     '-up'          : move_head_to_upstream,
+    '--exec'       : execute_batch_command,
     '--save'       : save_repo,
     '--list'       : list_all_saved_repo,
     '--stats'      : get_commit_stats,
