@@ -146,7 +146,7 @@ def list_all_saved_repo(args, extra_args):
         (category,))
     index = 0
     for row in c:
-        print('Repo ' + str(index) + ': ' + str(row[1]))
+        print('Repo ' + str(index) + ': ' + str(row[1]) + "(ID: " + str(row[0]) + ")")
         print('- path: ' + str(row[2]))
         print('- category: ' + str(row[3]))
         print('- update command: ' + str(row[4]))
@@ -261,7 +261,7 @@ def get_info(args, extra_args):
     results = c.fetchall()
 
     for row in results:
-        print('Repo ' + str(index) + ': ' + str(row[1]))
+        print('Repo ' + str(index) + ': ' + str(row[1]) + " (ID: " + str(row[0]) + ")")
         print('- path: ' + str(row[2]))
         print('- category: ' + str(row[3]))
         print('- update command: ' + str(row[4]))
