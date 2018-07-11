@@ -40,6 +40,11 @@ def save_repo(args, extra_args):
     repo_path = os.getcwd()
     repo_name = os.path.basename(repo_path)
 
+    # Verify if path is a git repo
+    if not os.path.exists(repo_path + '/.git'):
+        print('Current path is not a git project')
+        return
+
     print('Saving repo ' + repo_name)
     print('Identified path ' + repo_path)
     print('Repo Category: ' + category)
