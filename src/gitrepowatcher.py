@@ -363,6 +363,11 @@ def execute_batch_command(args, extra_args):
 
         print(repo_command_output)
 
+def handle_no_args():
+    print("Default mode: Update and Move HEAD to upstream\n")
+    update_in_batch([], [])
+    move_head_to_upstream([])
+
 commands_parse = {
     '-i'           : get_info,
     '-c'           : verify_changes,
@@ -378,6 +383,7 @@ commands_parse = {
     '--today'      : get_commits_of_today,
     '--update'     : update_in_batch,
     '--delete-all' : delete_all_repos,
+    'no-args'      : handle_no_args,
 }
 
 def parse_arguments():
@@ -385,6 +391,10 @@ def parse_arguments():
     args = {}
 
     last_key = ''
+
+    if len(sys.argv) == 1:
+        handle_no_args()
+        return
 
     for i in xrange(1, len(sys.argv)):
         a = sys.argv[i]
