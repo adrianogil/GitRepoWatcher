@@ -366,7 +366,7 @@ def execute_batch_command(args, extra_args):
 def handle_no_args():
     print("Default mode: Update and Move HEAD to upstream\n")
     update_in_batch([], [])
-    move_head_to_upstream([])
+    move_head_to_upstream([], [])
 
 commands_parse = {
     '-i'           : get_info,
@@ -394,7 +394,7 @@ def parse_arguments():
 
     if len(sys.argv) == 1:
         handle_no_args()
-        return
+        return None
 
     for i in xrange(1, len(sys.argv)):
         a = sys.argv[i]
@@ -409,6 +409,9 @@ def parse_arguments():
     return args
 
 def parse_commands(args):
+    if args is None:
+        return
+
     # print('DEBUG: Parsing args: ' + str(args))
     for a in args:
         if a in commands_parse:
