@@ -5,6 +5,7 @@
 
 alias repo-watcher='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
 alias rw='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
+alias rwc='rw -c'
 
 
 function rws()
