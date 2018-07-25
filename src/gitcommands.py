@@ -3,10 +3,23 @@ import subprocess
 def get_upstream_name(path):
     get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
     get_upstream_command = 'cd "' + path + '" && ' + get_upstream_name
+    # print(get_upstream_command)
     upstream = subprocess.check_output(get_upstream_command, shell=True)
     upstream = upstream.strip()
 
     return upstream
+
+def push_commits_to_upstream(path):
+    upstream = get_upstream_name(path)
+    upstream = upstream.replace('/', ' ')
+
+    push_commits = 'git push ' + upstream + ''
+    push_commits_command = 'cd "' + path + '" && ' + push_commits
+    # print(push_commits_command)
+    push_commits_output = subprocess.check_output(push_commits_command, shell=True)
+    push_commits_output = push_commits_output.strip()
+
+    return push_commits_output
 
 def get_diverge_commits_HEAD_to_upstream(path):
     upstream = get_upstream_name(path)

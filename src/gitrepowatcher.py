@@ -83,6 +83,43 @@ def update_in_batch(args, extra_args):
         except:
             print("Caught error when updating repo " + str(current_repo))
 
+def push_commits(args, extra_args):
+    # if '--all' in extra_args:
+    #     category = '%'
+    if len(args) == 0:
+        # category='default'
+        category = '%'
+    elif len(args) > 0:
+        category = args[0]
+
+    c.execute("SELECT * from Repo WHERE repo_category LIKE ? ORDER BY id_repo",
+        (category,))
+
+    current_repo = ''
+    index = 0;
+    results = c.fetchall()
+
+    unstaged_repos = []
+
+    for row in results:
+        try:
+            index = index + 1
+            
+            current_repo = str(row[1])
+            path = row[2]
+            total_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(path)
+
+            if total_commits > '0':
+                print("###################################################")
+                print('Repo ' + str(index) + ': Sending ' + str(total_commits) + ' commits')
+
+                command_output = gitcommands.push_commits_to_upstream(path)
+                print(command_output + "\n")
+
+        except:
+            print("Caught error when handling repo " + str(current_repo))
+    print("###################################################")
+
 def move_head_to_upstream(args, extra_args):
     if len(args) == 0:
         category='%'
@@ -376,6 +413,7 @@ commands_parse = {
     '-l'           : list_all_saved_repo,
     '-d'           : delete_saved_repo,
     '-up'          : move_head_to_upstream,
+    '-pc'          : push_commits,
     '--exec'       : execute_batch_command,
     '--save'       : save_repo,
     '--list'       : list_all_saved_repo,
