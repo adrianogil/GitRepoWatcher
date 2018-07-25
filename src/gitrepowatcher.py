@@ -111,7 +111,8 @@ def push_commits(args, extra_args):
 
             if total_commits > '0':
                 print("###################################################")
-                print('Repo ' + str(index) + ': Sending ' + str(total_commits) + ' commits')
+                print('Repo ' + str(index) + ' - ' + current_repo + ': Sending ' + \
+                    str(total_commits) + ' commits\n')
 
                 command_output = gitcommands.push_commits_to_upstream(path)
                 print(command_output + "\n")
