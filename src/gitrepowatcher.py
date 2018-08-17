@@ -68,20 +68,24 @@ def update_in_batch(args, extra_args):
     current_repo = ''
     index = 0;
     for row in c:
-        try:
-            index = index + 1
-            print("###################################################")
-            current_repo = str(row[1])
-            print('Repo ' + str(index) + ': Updating ' + current_repo)
-            update_command = 'cd "' + str(row[2]) + '" && ' + str(row[4])
-            update_output = subprocess.check_output(update_command, shell=True)
-            print(update_output)
+        # try:
+        index = index + 1
+        print("###################################################")
+        current_repo = str(row[1])
+        print('Repo ' + str(index) + ': Updating ' + current_repo)
+        update_command = 'cd "' + str(row[2]) + '" && ' + str(row[4])
 
-            diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(row[2])
+        def preexec_function():
+            os.setpgrp()
 
-            print(diverge_commits + ' new commits')
-        except:
-            print("Caught error when updating repo " + str(current_repo))
+        update_output = subprocess.check_output(update_command, shell=True, stdin=subprocess.PIPE, preexec_fn=preexec_function)
+        print(update_output)
+
+        diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(row[2])
+
+        print(diverge_commits + ' new commits')
+        # except:
+        #     print("Caught error when updating repo " + str(current_repo))
 
 def push_commits(args, extra_args):
     # if '--all' in extra_args:
