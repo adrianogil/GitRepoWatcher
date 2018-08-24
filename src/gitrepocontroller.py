@@ -13,6 +13,7 @@ from entity.entityfactory import EntityFactory
 importutils.addpath(__file__, 'commands')
 import commands.save_repo_command
 import commands.list_repos_command
+import commands.get_info_commmand
 
 class OperationObject:
     def __init__(self, operation_success, data):
@@ -36,7 +37,7 @@ class GitRepoController:
 
     def get_commands(self):
         commands_parse = {
-            # '-i'           : get_info,
+            '-i'           : commands.get_info_commmand.execute,
             # '-c'           : verify_changes,
             '-s'           : commands.save_repo_command.execute,
             # '-u'           : update_in_batch,

@@ -36,6 +36,13 @@ class RepoDAO:
         return repo
 
     def get_all(self, conditions):
+
+        def add_condition(query_conditions, condition):
+            if query_conditions == '':
+                return condition
+            else:
+                return query_conditions + ' OR ' + condition
+
         sql_query_get_all = "SELECT * FROM RepoWatcher"
         self.cursor.execute(sql_query_get_all)
         rows = self.cursor.fetchall()
