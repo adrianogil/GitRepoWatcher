@@ -24,7 +24,7 @@ class RepoDAO:
                             "(repo_name, repo_path, update_command, operation_time)" + \
                             " VALUES (:repo_name, :repo_path, :update_command, :operation_time)"
         save_data = repo.get_data_tuple(True)
-        print(str(save_data))
+        print("DEBUG: repodao - save - " + str(save_data))
         self.cursor.execute(sql_query_save, save_data)
         self.conn.commit()
 
@@ -35,7 +35,7 @@ class RepoDAO:
 
         return repo
 
-    def get_all(self):
+    def get_all(self, conditions):
         sql_query_get_all = "SELECT * FROM RepoWatcher"
         self.cursor.execute(sql_query_get_all)
         rows = self.cursor.fetchall()

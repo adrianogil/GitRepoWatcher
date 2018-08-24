@@ -60,7 +60,7 @@ def execute(args, extra_args, controller):
         "name"           : repo_name,
         "path"           : repo_path,
         "categories"     : get_categories_from(extra_args, controller),
-        "update_command" : repo_name,
+        "update_command" : update_command,
     }
 
     repo = controller.entity_factory.create_repo(repo_args)

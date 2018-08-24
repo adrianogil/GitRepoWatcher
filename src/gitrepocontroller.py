@@ -60,6 +60,5 @@ class GitRepoController:
         saved_repo = self.repoDAO.save(repo)
         return OperationObject(saved_repo is not None, saved_repo)
 
-    def get_repos(self):
-
-        return self.repoDAO.get_all()
+    def get_repos(self, conditions=[]):
+        return self.repoDAO.get_all(conditions)
