@@ -1,14 +1,12 @@
 
-
 class RepoDAO:
-    def __init__(self, conn, cursor, entityFactory, categoryDAO, accountDAO):
+    def __init__(self, conn, cursor, entity_factory, categoryDAO):
         self.conn = conn
         self.cursor = cursor
-        self.entityFactory = entityFactory
+        self.entity_factory = entity_factory
         self.categoryDAO = categoryDAO
-        self.accountDAO = accountDAO
 
-    def createTables(self):
+    def create_tables(self):
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS RepoWatcher (
                 id_repo INTEGER,
@@ -17,26 +15,49 @@ class RepoDAO:
                 update_command TEXT,
                 operation_time TEXT,
                 PRIMARY KEY (id_repo)
-        ''')
-        self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS RepoCategories (
-                id_repocategory INTEGER,
-                id_repo INTEGER,
-                id_category INTEGER,
-                FOREIGN KEY (id_repo) REFERENCES RepoWatcher (id_repo)
-                FOREIGN KEY (id_category) REFERENCES Categories (id_category)
-                PRIMARY KEY (id_repocategory)
-                )
+            )
         ''')
 
     def save(self, repo):
         # Save current register
-        sql_query_save = "INSERT INTO RepoWatcher (repo_name, repo_path, update_command, operation_time)" + \
-                        " VALUES (:repo_name, :repo_path, :update_command, :operation_time)"
-        save_data = repo.get_data_tuple()
+        sql_query_save = "INSERT INTO RepoWatcher " + \
+                            "(repo_name, repo_path, update_command, operation_time)" + \
+                            " VALUES (:repo_name, :repo_path, :update_command, :operation_time)"
+        save_data = repo.get_data_tuple(True)
         print(str(save_data))
         self.cursor.execute(sql_query_save, save_data)
         self.conn.commit()
+
+        repo_obj = self.get_from_time(save_data[3])
+        repo.id = repo_obj.id
+
+        self.categoryDAO.update_from(repo)
+
+        return repo
+
+    def get_from_time(self, operation_time):
+        sql_query_load_id = "SELECT * FROM RepoWatcher WHERE operation_time = ?"
+        self.cursor.execute(sql_query_load_id, (operation_time,))
+        self.conn.commit()
+
+        row = self.cursor.fetchone()
+        if row is None:
+            return None
+        repo = self.parse_repo_from_row(row)
+
+        return repo
+
+
+    def parse_repo_from_row(self, row):
+        repo_args = {
+            "id"             : int(row[0]),
+            "name"           : row[1],
+            "path"           : row[2],
+            "update_command" : row[3],
+        }
+
+        repo = self.entity_factory.create_repo(repo_args)
+        return repo
 
     def update(self, moneyRegister):
         sql_query_update = "UPDATE FinancialRegisters SET description = ?," + \

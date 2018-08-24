@@ -2,27 +2,31 @@ import datetime
 
 class Repo:
     def __init__(self, args):
-        self.id = -1
-        if 'amount' in args:
-            self.amount = args['amount']
+        
+        if 'id' in args:
+            self.id = int(args['id'])
         else:
-            self.amount = 0
-
-        if 'description' in args:
-            self.description = args['description']
+            self.id = -1
+            
+        if 'name' in args:
+            self.name = args['name']
         else:
-            self.description = ""
+            self.name = ""
 
-        if 'register_dt' in args:
-            self.register_dt = args['register_dt']
+        if 'path' in args:
+            self.path = args['path']
         else:
-            self.register_dt = datetime.datetime.now()
+            self.path = ""
 
-        if 'category' in args:
-            self.category = args['category']
+        if 'categories' in args:
+            self.categories = args['categories']
+        else:
+            self.categories = []
 
-        if 'account' in args:
-            self.account = args['account']
+        if 'update_command' in args:
+            self.update_command = args['update_command']
+        else:
+            self.update_command = ""
 
     def __str__(self):
         return "(ID: " + str(self.id) + \
@@ -35,8 +39,8 @@ class Repo:
         return datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     def get_data_tuple(self, add_timestamp=False):
-        data_tuple = (self.repo_name, \
-                     self.repo_path, \
+        data_tuple = (self.name, \
+                     self.path, \
                      self.update_command)
         if add_timestamp:
             data_tuple = data_tuple + (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),)
