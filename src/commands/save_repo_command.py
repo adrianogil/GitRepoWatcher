@@ -56,7 +56,7 @@ def execute(args, extra_args, controller):
         print('Current path is not a git project')
         return
     
-    repo_path = git_repo_path
+    repo_path = git_repo_path[:-1]
     repo_name = os.path.basename(repo_path)
 
     print('Saving repo ' + repo_name)

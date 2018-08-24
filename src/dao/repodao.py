@@ -35,6 +35,22 @@ class RepoDAO:
 
         return repo
 
+    def get_all(self):
+        sql_query_get_all = "SELECT * FROM RepoWatcher"
+        self.cursor.execute(sql_query_get_all)
+        rows = self.cursor.fetchall()
+
+        repo_list = []
+
+        for row in rows:
+            # print('DEBUG: repodao - get_all - ' + row[1])
+            repo = self.parse_repo_from_row(row)
+            repo.categories = self.categoryDAO.get_all_from(repo)
+            repo_list.append(repo)
+
+        return repo_list
+
+
     def get_from_time(self, operation_time):
         sql_query_load_id = "SELECT * FROM RepoWatcher WHERE operation_time = ?"
         self.cursor.execute(sql_query_load_id, (operation_time,))

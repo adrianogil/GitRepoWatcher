@@ -70,6 +70,24 @@ class CategoryDAO:
 
         return category_list
 
+    def get_all_from(self, repo):
+        sql_query_get_all = "SELECT * FROM Categories " + \
+            "WHERE id_category IN (SELECT id_category FROM RepoCategories WHERE id_repo LIKE ?)"
+        sql_query_data = (repo.id,)
+
+        self.cursor.execute(sql_query_get_all, sql_query_data)
+        rows = self.cursor.fetchall()
+
+        category_list = []
+
+        for row in rows:
+            category = self.entityFactory.create_category(row[1])
+            category.id = int(row[0])
+
+            category_list.append(category)
+
+        return category_list
+
     def save(self, name):
         print('debug: categorydao - save - ' + name)
         sql_query_save = "INSERT INTO Categories (category_name)" + \

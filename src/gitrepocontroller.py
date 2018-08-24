@@ -12,6 +12,7 @@ from entity.entityfactory import EntityFactory
 
 importutils.addpath(__file__, 'commands')
 import commands.save_repo_command
+import commands.list_repos_command
 
 class OperationObject:
     def __init__(self, operation_success, data):
@@ -39,7 +40,7 @@ class GitRepoController:
             # '-c'           : verify_changes,
             '-s'           : commands.save_repo_command.execute,
             # '-u'           : update_in_batch,
-            # '-l'           : list_all_saved_repo,
+            '-l'           : commands.list_repos_command.execute,
             # '-d'           : delete_saved_repo,
             # '-up'          : move_head_to_upstream,
             # '-pc'          : push_commits,
@@ -58,3 +59,7 @@ class GitRepoController:
 
         saved_repo = self.repoDAO.save(repo)
         return OperationObject(saved_repo is not None, saved_repo)
+
+    def get_repos(self):
+
+        return self.repoDAO.get_all()
