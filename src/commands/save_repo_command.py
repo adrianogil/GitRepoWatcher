@@ -1,5 +1,4 @@
 import os
-import git # pip install gitpython
 
 from subprocess import *
 
@@ -10,13 +9,6 @@ def get_git_root(p):
     else:
         root = check_output(["git", "rev-parse", "--show-toplevel"], cwd=p)
         return root
-
-def is_git_repo(path):
-    try:
-        _ = git.Repo(path).git_dir
-        return True
-    except git.exc.InvalidGitRepositoryError:
-        return False
 
 def get_categories_from(extra_args, controller):
     if '-c' in extra_args:
