@@ -35,16 +35,45 @@ class RepoDAO:
 
         return repo
 
-    def get_all(self, conditions):
+    def add_condition(self, query_conditions, condition):
+        if query_conditions == '':
+            return condition
+        else:
+            return query_conditions + ' ADD ' + condition
 
-        def add_condition(query_conditions, condition):
-            if query_conditions == '':
-                return condition
-            else:
-                return query_conditions + ' OR ' + condition
+    def build_query_condition(self, conditions):
+        query_conditions = ""
+        conditions_data = ()
+
+        if 'id' in conditions:
+            id_conditions = "id_repo LIKE ?"
+            query_conditions = self.add_condition(query_conditions, id_conditions)
+            conditions_data = conditions_data + (conditions['id'],)
+
+        if 'path' in conditions:
+            path_conditions = "repo_path LIKE ?"
+            query_conditions = self.add_condition(query_conditions, path_conditions)
+            conditions_data = conditions_data + (conditions['path'],)
+
+        if 'update_command' in conditions:
+            command_conditions = "update_command LIKE ?"
+            query_conditions = self.add_condition(query_conditions, command_conditions)
+            conditions_data = conditions_data + (conditions['update_command'],)
+
+        return (query_conditions, conditions_data)
+
+
+    def get_all(self, conditions=[]):
 
         sql_query_get_all = "SELECT * FROM RepoWatcher"
-        self.cursor.execute(sql_query_get_all)
+        if len(conditions) == 0:
+            self.cursor.execute(sql_query_get_all)
+        else:
+            query_conditions, conditions_data = self.build_query_condition(conditions)
+            # print('DEBUG: repodao - get_all - ' + query_conditions)
+            sql_query_get_all = sql_query_get_all + " WHERE " + query_conditions
+            self.cursor.execute(sql_query_get_all, conditions_data)
+
         rows = self.cursor.fetchall()
 
         repo_list = []

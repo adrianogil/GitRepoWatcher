@@ -9,7 +9,7 @@ def get_search_conditions(args, extra_args, controller):
             search_conditions['id'] = int(a)
         elif os.path.isdir(a):
             search_conditions['path'] = a
-        elif len(a) > 5 and a[0:2] == 'git'
+        elif len(a) > 5 and a[:2] == 'git':
             search_conditions['update_command'] = a
         else:
             if 'categories' in search_conditions:
@@ -29,21 +29,17 @@ def execute(args, extra_args, controller):
 
     search_conditions = get_search_conditions(args, extra_args, controller)
 
-    sql_query = "SELECT * from Repo WHERE " + query_conditions + " ORDER BY id_repo"
-    # print('Debug: ' + sql_query)
+    repo_list = controller.get_repos(search_conditions)
 
-    c.execute(sql_query,
-        query_data)
     index = 0
-
-    results = c.fetchall()
-
-    for row in results:
-        print('Repo ' + str(index) + ': ' + str(row[1]) + " (ID: " + str(row[0]) + ")")
-        print('- path: ' + str(row[2]))
-        print('- category: ' + str(row[3]))
-        print('- update command: ' + str(row[4]))
+    for repo in repo_list:
+        print('Repo ' + str(index) + ': ' + str(repo.name) + " (ID: " + str(repo.id) + ")")
+        print('- path: ' + str(repo.path))
+        print('- categories: ')
+        for c in repo.categories:
+            print('--\t' + c.name)
+        print('- update command: ' + str(repo.update_command))
         index = index + 1
 
-    if len(args) == 0 and len(results) == 0:
+    if len(repo_list) == 0:
         print('Current path is not saved as a repo.')
