@@ -1,5 +1,7 @@
 import sqlite3, os
 
+import subprocess
+
 import gitcommands
 import utils, importutils
 
@@ -11,8 +13,9 @@ importutils.addpath(__file__, 'entity')
 from entity.entityfactory import EntityFactory
 
 importutils.addpath(__file__, 'commands')
-import commands.save_repo_command
+import commands.verify_change_command
 import commands.list_repos_command
+import commands.save_repo_command
 import commands.get_info_command
 
 class OperationObject:
@@ -37,11 +40,11 @@ class GitRepoController:
 
     def get_commands(self):
         commands_parse = {
-            '-i'           : commands.get_info_command.execute,
-            # '-c'           : verify_changes,
-            '-s'           : commands.save_repo_command.execute,
-            # '-u'           : update_in_batch,
+            '-c'           : commands.verify_change_command.execute,
             '-l'           : commands.list_repos_command.execute,
+            '-s'           : commands.save_repo_command.execute,
+            '-i'           : commands.get_info_command.execute,
+            # '-u'           : update_in_batch,
             # '-d'           : delete_saved_repo,
             # '-up'          : move_head_to_upstream,
             # '-pc'          : push_commits,
@@ -63,3 +66,22 @@ class GitRepoController:
 
     def get_repos(self, conditions=[]):
         return self.repoDAO.get_all(conditions)
+
+    def get_unstaged_files(self, repo):
+        current_repo = repo.name
+        print('Repo ' + str(repo.id) + ': Verify changes in ' + current_repo)
+        get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
+        get_upstream_command = 'cd "' + repo.path + '" && ' + get_upstream_name
+        upstream = subprocess.check_output(get_upstream_command, shell=True)
+        upstream = upstream.strip()
+
+        get_unstaged_files = 'git diff --numstat | wc -l'
+        get_unstaged_command = 'cd "' + repo.path + '" && ' + get_unstaged_files
+        unstaged = subprocess.check_output(get_unstaged_command, shell=True)
+        unstaged = unstaged.strip()
+
+        return unstaged
+
+    def get_total_commits(self, repo):
+        total_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(repo.path)
+        return total_commits
