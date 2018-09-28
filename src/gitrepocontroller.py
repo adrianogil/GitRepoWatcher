@@ -14,6 +14,7 @@ from entity.entityfactory import EntityFactory
 
 importutils.addpath(__file__, 'commands')
 import commands.verify_change_command
+import commands.update_batch_command
 import commands.list_repos_command
 import commands.save_repo_command
 import commands.get_info_command
@@ -44,7 +45,7 @@ class GitRepoController:
             '-l'           : commands.list_repos_command.execute,
             '-s'           : commands.save_repo_command.execute,
             '-i'           : commands.get_info_command.execute,
-            # '-u'           : update_in_batch,
+            '-u'           : commands.update_batch_command.execute,
             # '-d'           : delete_saved_repo,
             # '-up'          : move_head_to_upstream,
             # '-pc'          : push_commits,
@@ -58,6 +59,19 @@ class GitRepoController:
             # 'no-args'      : handle_no_args,
         }
         return commands_parse
+
+    def update_gitrepo(self, repo):
+        update_command = 'cd "' + repo.path + '" && ' + repo.update_command
+
+        def preexec_function():
+            os.setpgrp()
+
+        update_output = subprocess.check_output(update_command, shell=True, stdin=subprocess.PIPE, preexec_fn=preexec_function)
+        print(update_output)
+
+        diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
+        print(diverge_commits + ' new commits')
+
 
     def save_repo(self, repo):
 
