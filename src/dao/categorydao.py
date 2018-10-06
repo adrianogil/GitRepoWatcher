@@ -102,6 +102,9 @@ class CategoryDAO:
 
     def update_from(self, repo):
         self.remove_all_categories_from(repo)
+        if repo is None or repo.categories is None:
+            return
+        print(repo.categories)
         for c in repo.categories:
             self.save_repo_category(repo, c)
 

@@ -14,6 +14,7 @@ from entity.entityfactory import EntityFactory
 
 importutils.addpath(__file__, 'commands')
 import commands.verify_change_command
+import commands.delete_repo_command
 import commands.update_batch_command
 import commands.list_repos_command
 import commands.save_repo_command
@@ -46,7 +47,7 @@ class GitRepoController:
             '-s'           : commands.save_repo_command.execute,
             '-i'           : commands.get_info_command.execute,
             '-u'           : commands.update_batch_command.execute,
-            # '-d'           : delete_saved_repo,
+            '-d'           : commands.delete_repo_command.execute,
             # '-up'          : move_head_to_upstream,
             # '-pc'          : push_commits,
             # '--exec'       : execute_batch_command,
@@ -99,3 +100,7 @@ class GitRepoController:
     def get_total_commits(self, repo):
         total_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(repo.path)
         return total_commits
+
+    def delete_repos(self, repos):
+        for r in repos:
+            self.repoDAO.delete(r)

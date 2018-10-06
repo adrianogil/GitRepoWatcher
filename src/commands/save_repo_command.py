@@ -24,7 +24,7 @@ def get_categories_from(extra_args, controller):
 
         return categories_objs
     else:
-        return controller.categoryDAO.default_category
+        return [controller.categoryDAO.default_category]
 
 def execute(args, extra_args, controller):
     print("save_repo_command.py - " + str(args) + " " + str(extra_args))

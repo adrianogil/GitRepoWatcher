@@ -25,20 +25,19 @@ def get_search_conditions(args, extra_args, controller):
     return search_conditions
 
 def execute(args, extra_args, controller):
+    repo_list = controller.get_repos()
 
+    # if len(args) == 0:
+    #     repo_path = os.getcwd()
+    #     sql_query_delete = "DELETE FROM Repo WHERE repo_path = ?"
+    #     delete_data = (repo_path,)
+    # elif len(args) == 1:
+    #     id_repo = int(args[0])
+    #     sql_query_delete = "DELETE FROM Repo WHERE id_repo = ?"
+    #     delete_data = (id_repo,)
+    
     search_conditions = get_search_conditions(args, extra_args, controller)
 
     repo_list = controller.get_repos(search_conditions)
 
-    index = 0
-    for repo in repo_list:
-        print('Repo ' + str(index) + ': ' + str(repo.name) + " (ID: " + str(repo.id) + ")")
-        print('- path: ' + str(repo.path))
-        print('- categories: ')
-        for c in repo.categories:
-            print('--\t' + c.name)
-        print('- update command: ' + str(repo.update_command))
-        index = index + 1
-
-    if len(repo_list) == 0:
-        print('Current path is not saved as a repo.')
+    controller.delete_repos(repo_list)

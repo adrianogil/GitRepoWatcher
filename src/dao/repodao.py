@@ -122,8 +122,8 @@ class RepoDAO:
         self.cursor.execute(sql_query_update, update_data)
         self.conn.commit()
 
-    def delete(self, moneyRegister):
-        sql_query_delete = "DELETE FROM FinancialRegisters WHERE id_register=?"
-        delete_data = (moneyRegister.id,)
+    def delete(self, repo):
+        sql_query_delete = "DELETE FROM RepoWatcher WHERE id_repo=?"
+        delete_data = (repo.id,)
         self.cursor.execute(sql_query_delete, delete_data)
         self.conn.commit()
