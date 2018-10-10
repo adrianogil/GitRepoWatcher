@@ -18,7 +18,9 @@ import commands.delete_repo_command
 import commands.update_batch_command
 import commands.list_repos_command
 import commands.save_repo_command
+import commands.move_head_command
 import commands.get_info_command
+
 
 class OperationObject:
     def __init__(self, operation_success, data):
@@ -48,7 +50,7 @@ class GitRepoController:
             '-i'           : commands.get_info_command.execute,
             '-u'           : commands.update_batch_command.execute,
             '-d'           : commands.delete_repo_command.execute,
-            # '-up'          : move_head_to_upstream,
+            '-up'          : commands.move_head_command.execute,
             # '-pc'          : push_commits,
             # '--exec'       : execute_batch_command,
             # '--save'       : save_repo,
@@ -104,3 +106,55 @@ class GitRepoController:
     def delete_repos(self, repos):
         for r in repos:
             self.repoDAO.delete(r)
+
+    def get_search_conditions(self, args, extra_args):
+
+        search_conditions = {}
+
+        for a in args:
+            if utils.is_int(a):
+                search_conditions['id'] = int(a)
+            elif os.path.isdir(a):
+                search_conditions['path'] = a
+            elif len(a) > 5 and a[:2] == 'git':
+                search_conditions['update_command'] = a
+            else:
+                if 'categories' in search_conditions:
+                    cat_list = search_conditions['categories']
+                    cat_list.append(a)
+                    search_conditions['categories'] = cat_list
+                else:
+                    search_conditions['categories'] = [a]
+
+        if not 'path' in search_conditions:
+            search_conditions['path'] = os.getcwd()        
+
+        return search_conditions
+
+    def get_diverge_commits_to_upstream(self, repo):
+        diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
+
+        return diverge_commits
+
+    def get_diverge_commits_from_upstream(self, repo):
+        diverge_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(repo.path)
+
+        return diverge_commits
+
+
+    def get_unstaged_files(self, repo):
+        get_unstaged_files = 'git diff --numstat | wc -l'
+        get_unstaged_command = 'cd "' + repo.path + '" && ' + get_unstaged_files
+        unstaged = subprocess.check_output(get_unstaged_command, shell=True)
+        unstaged = unstaged.strip()
+
+        return unstaged
+
+    def move_to_upstream(self, repo):
+        upstream = gitcommands.get_upstream_name(repo.path)
+        
+        move_upstream = ' git reset --hard ' + upstream.strip()
+        move_upstream_command = 'cd "' + repo.path + '" && ' + move_upstream
+        move_output = subprocess.check_output(move_upstream_command, shell=True)
+
+        return move_output
