@@ -15,6 +15,7 @@ from entity.entityfactory import EntityFactory
 importutils.addpath(__file__, 'commands')
 
 import commands.verify_change_command
+import commands.today_commits_command
 import commands.push_commits_command
 import commands.update_batch_command
 import commands.commit_stats_command
@@ -55,10 +56,10 @@ class GitRepoController:
             '-up'          : commands.move_head_command.execute,
             '-pc'          : commands.push_commits_command.execute,
             '--stats'      : commands.commit_stats_command.execute,
+            '--today'      : commands.today_commits_command.execute,
             # '--exec'       : execute_batch_command,
             # '--save'       : save_repo,
             # '--list'       : list_all_saved_repo,
-            # '--today'      : get_commits_of_today,
             # '--update'     : update_in_batch,
             # '--delete-all' : delete_all_repos,
             # 'no-args'      : handle_no_args,
@@ -172,3 +173,7 @@ class GitRepoController:
     def get_total_commits(self, repo):
 
         return gitcommands.get_total_commits(repo.path)
+
+    def get_today_commits(self, repo):
+        
+        return gitcommands.get_today_commits(repo.path)
