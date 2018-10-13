@@ -24,6 +24,7 @@ import commands.list_repos_command
 import commands.save_repo_command
 import commands.move_head_command
 import commands.get_info_command
+import commands.execute_command
 
 class OperationObject:
     def __init__(self, operation_success, data):
@@ -45,6 +46,11 @@ class GitRepoController:
         self.categoryDAO.create_tables()
         self.repoDAO.create_tables()
 
+    def handle_no_args():
+        print("Default mode: Update and Move HEAD to upstream\n")
+        commands.update_batch_command.execute([], [])
+        commands.move_head_command.execute([], [])
+
     def get_commands(self):
         commands_parse = {
             '-c'           : commands.verify_change_command.execute,
@@ -57,12 +63,12 @@ class GitRepoController:
             '-pc'          : commands.push_commits_command.execute,
             '--stats'      : commands.commit_stats_command.execute,
             '--today'      : commands.today_commits_command.execute,
-            # '--exec'       : execute_batch_command,
-            # '--save'       : save_repo,
-            # '--list'       : list_all_saved_repo,
-            # '--update'     : update_in_batch,
+            '--list'       : commands.list_repos_command.execute,
+            '--save'       : commands.save_repo_command.execute,
+            '--update'     : commands.update_batch_command.execute,
+            '--exec'       : commands.execute_command.execute,
             # '--delete-all' : delete_all_repos,
-            # 'no-args'      : handle_no_args,
+            'no-args'      : self.handle_no_args,
         }
         return commands_parse
 
