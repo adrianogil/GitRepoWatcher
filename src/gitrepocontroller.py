@@ -13,14 +13,15 @@ importutils.addpath(__file__, 'entity')
 from entity.entityfactory import EntityFactory
 
 importutils.addpath(__file__, 'commands')
+
 import commands.verify_change_command
-import commands.delete_repo_command
+import commands.push_commits_command
 import commands.update_batch_command
+import commands.delete_repo_command
 import commands.list_repos_command
 import commands.save_repo_command
 import commands.move_head_command
 import commands.get_info_command
-
 
 class OperationObject:
     def __init__(self, operation_success, data):
@@ -51,7 +52,7 @@ class GitRepoController:
             '-u'           : commands.update_batch_command.execute,
             '-d'           : commands.delete_repo_command.execute,
             '-up'          : commands.move_head_command.execute,
-            # '-pc'          : push_commits,
+            '-pc'          : commands.push_commits_command.execute,
             # '--exec'       : execute_batch_command,
             # '--save'       : save_repo,
             # '--list'       : list_all_saved_repo,

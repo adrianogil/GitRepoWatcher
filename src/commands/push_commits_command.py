@@ -9,24 +9,16 @@ def execute(args, extra_args, controller):
 
     index = 0
     for repo in repo_list:
-        # print('Repo ' + str(index) + ': ' + str(repo.name) + " (ID: " + str(repo.id) + ")")
-        # print('- path: ' + str(repo.path))
-        # print('- categories: ')
-        # for c in repo.categories:
-        #     print('--\t' + c.name)
-        # print('- update command: ' + str(repo.update_command))
+        try:
+            results = controller.push_commits_to_upstream(repo)
 
-        current_repo = str(row[1])
-        path = row[2]
-        results = controller.push_commits_to_upstream(repo)
-
-        if results['ok?']:
-            print("###################################################")
-            print('Repo ' + str(index) + ' - ' + repo.name + ': Sending ' + \
-                str(results['commits']) + ' commits\n')
-            print(results['output'] + "\n")
+            if results['ok?']:
+                print("###################################################")
+                print('Repo ' + str(index) + ' - ' + repo.name + ': Sending ' + \
+                    str(results['commits']) + ' commits\n')
+                print(results['output'] + "\n")
         except:
-            print("Caught error when handling repo " + str(current_repo))
+            print("Caught error when handling repo " + str(repo.name))
         index = index + 1
     print("###################################################")
             
