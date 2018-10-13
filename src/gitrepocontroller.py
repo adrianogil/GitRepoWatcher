@@ -17,6 +17,7 @@ importutils.addpath(__file__, 'commands')
 import commands.verify_change_command
 import commands.push_commits_command
 import commands.update_batch_command
+import commands.commit_stats_command
 import commands.delete_repo_command
 import commands.list_repos_command
 import commands.save_repo_command
@@ -53,10 +54,10 @@ class GitRepoController:
             '-d'           : commands.delete_repo_command.execute,
             '-up'          : commands.move_head_command.execute,
             '-pc'          : commands.push_commits_command.execute,
+            '--stats'      : commands.commit_stats_command.execute,
             # '--exec'       : execute_batch_command,
             # '--save'       : save_repo,
             # '--list'       : list_all_saved_repo,
-            # '--stats'      : get_commit_stats,
             # '--today'      : get_commits_of_today,
             # '--update'     : update_in_batch,
             # '--delete-all' : delete_all_repos,
@@ -167,3 +168,7 @@ class GitRepoController:
             command_output = gitcommands.push_commits_to_upstream(repo.path)
             return {"ok?": True, "commits" : total_commits,  "output" : command_output}
         return {"ok?": False}
+
+    def get_total_commits(self, repo):
+
+        return gitcommands.get_total_commits(repo.path)

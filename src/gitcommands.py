@@ -48,6 +48,8 @@ def get_total_commits(path):
     total_commits = subprocess.check_output(get_total_commits_command, shell=True)
     total_commits = total_commits.strip()
 
+    total_commits = int(total_commits)
+
     return total_commits
 
 def get_today_commits(path):
