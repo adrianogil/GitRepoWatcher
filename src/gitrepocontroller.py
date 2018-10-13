@@ -152,9 +152,17 @@ class GitRepoController:
 
     def move_to_upstream(self, repo):
         upstream = gitcommands.get_upstream_name(repo.path)
-        
+
         move_upstream = ' git reset --hard ' + upstream.strip()
         move_upstream_command = 'cd "' + repo.path + '" && ' + move_upstream
         move_output = subprocess.check_output(move_upstream_command, shell=True)
 
         return move_output
+
+    def push_commits_to_upstream(self, repo):
+        total_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(repo.path)
+
+        if total_commits > '0':
+            command_output = gitcommands.push_commits_to_upstream(repo.path)
+            return {"ok?": True, "commits" : total_commits,  "output" : command_output}
+        return {"ok?": False}
