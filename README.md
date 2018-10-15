@@ -17,7 +17,7 @@ repo-watcher -s <category>
 
 Save a repo with a specific update command and a category
 ```
-repo-watcher -s <category> <update-command> 
+repo-watcher -s <category> <update-command>
 ```
 
 Update all saved repos. It will can the update command of each registered repo.
@@ -76,6 +76,7 @@ repo-watcher --today
 - Refactoring code using DAO
 - More than one category for repo
 - Add a excluding category
+- Add few features similar to [https://github.com/kamranahmedse/git-standup](git-standup)
 
 ## Installation
 
