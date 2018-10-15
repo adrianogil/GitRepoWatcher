@@ -34,7 +34,7 @@ class OperationObject:
 class GitRepoController:
     def __init__(self, db_directory):
         # Open Connection
-        conn = sqlite3.connect(db_directory + 'repowatcher2.sqlite');
+        conn = sqlite3.connect(db_directory + 'gitrepowatcher.sqlite');
 
         # Creating cursor
         c = conn.cursor()
@@ -67,7 +67,6 @@ class GitRepoController:
             '--save'       : commands.save_repo_command.execute,
             '--update'     : commands.update_batch_command.execute,
             '--exec'       : commands.execute_command.execute,
-            # '--delete-all' : delete_all_repos,
             'no-args'      : self.handle_no_args,
         }
         return commands_parse
@@ -119,6 +118,9 @@ class GitRepoController:
     def get_search_conditions(self, args, extra_args):
 
         search_conditions = {}
+
+        if '--all' in extra_args:
+            return {}
 
         for a in args:
             if utils.is_int(a):

@@ -3,12 +3,17 @@
 # source $GIT_REPO_WATCHER_DIR/src/bashrc.sh
 
 
-alias repo-watcher='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
-alias rw='python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py'
+MAIN_SCRIPT=gitrepowatcher.py
+OLD_SCRIPT=gitrepowatcher_old.py
+
+alias repo-watcher='python2 $GIT_REPO_WATCHER_DIR/src/$MAIN_SCRIPT'
+alias rw='python2 $GIT_REPO_WATCHER_DIR/src/$MAIN_SCRIPT'
 alias rwc='rw -c'
 
 
+alias rw-old='python2 $GIT_REPO_WATCHER_DIR/src/$OLD_SCRIPT'
+
 function rws()
 {
-    python2 $GIT_REPO_WATCHER_DIR/src/gitrepowatcher.py $* | less    
+    python2 $GIT_REPO_WATCHER_DIR/src/$MAIN_SCRIPT $* | less    
 }
