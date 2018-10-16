@@ -119,6 +119,14 @@ class GitRepoController:
 
         search_conditions = {}
 
+        def add_category(cat):
+            if 'categories' in search_conditions:
+                cat_list = search_conditions['categories']
+                cat_list.append(cat)
+                search_conditions['categories'] = cat_list
+            else:
+                search_conditions['categories'] = [cat]
+
         if '--all' in extra_args:
             return {}
 
@@ -130,12 +138,11 @@ class GitRepoController:
             elif len(a) > 5 and a[:2] == 'git':
                 search_conditions['update_command'] = a
             else:
-                if 'categories' in search_conditions:
-                    cat_list = search_conditions['categories']
-                    cat_list.append(a)
-                    search_conditions['categories'] = cat_list
-                else:
-                    search_conditions['categories'] = [a]
+                add_category(a)
+
+        if '-cs' in extra_args:
+            for c in extra_args['-cs']:
+                add_category(c)
 
         if not 'path' in search_conditions:
             search_conditions['path'] = gitcommands.get_git_root(os.getcwd())
