@@ -28,6 +28,8 @@ class Repo:
         else:
             self.update_command = ""
 
+        self.internal_datetime = datetime.datetime.now()
+
     def __str__(self):
         return "(ID: " + str(self.id) + \
                  ', repo: ' + self.repo_name + \
@@ -36,14 +38,14 @@ class Repo:
 
 
     def get_register_dt(self):
-        return datetime.strftime("%Y-%m-%d %H:%M:%S")
+        return self.internal_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
     def get_data_tuple(self, add_timestamp=False):
         data_tuple = (self.name, \
                      self.path, \
                      self.update_command)
         if add_timestamp:
-            data_tuple = data_tuple + (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),)
+            data_tuple = data_tuple + (self.internal_datetime.strftime("%Y-%m-%d %H:%M:%S"),)
         return data_tuple
 
 

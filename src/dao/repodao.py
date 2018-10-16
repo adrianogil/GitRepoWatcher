@@ -28,7 +28,7 @@ class RepoDAO:
         self.cursor.execute(sql_query_save, save_data)
         self.conn.commit()
 
-        repo_obj = self.get_from_time(save_data[3])
+        repo_obj = self.reload(repo)
         repo.id = repo_obj.id
 
         self.categoryDAO.update_from(repo)
@@ -90,6 +90,20 @@ class RepoDAO:
     def get_from_time(self, operation_time):
         sql_query_load_id = "SELECT * FROM RepoWatcher WHERE operation_time = ?"
         self.cursor.execute(sql_query_load_id, (operation_time,))
+        self.conn.commit()
+
+        row = self.cursor.fetchone()
+        if row is None:
+            return None
+        repo = self.parse_repo_from_row(row)
+
+        return repo
+
+    def reload(self, repo):
+        sql_query_load_id = "SELECT * FROM RepoWatcher " + \
+                        " WHERE operation_time = ? " + \
+                        " AND repo_path LIKE ? "
+        self.cursor.execute(sql_query_load_id, (repo.get_register_dt(), repo.path))
         self.conn.commit()
 
         row = self.cursor.fetchone()

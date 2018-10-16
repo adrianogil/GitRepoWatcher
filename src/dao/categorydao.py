@@ -109,6 +109,8 @@ class CategoryDAO:
             self.save_repo_category(repo, c)
 
     def save_repo_category(self, repo, category):
+        print('DEBUG - save_repo_category - repo - ' + str(repo.id) + ' - category - ' + \
+            str(category.id))
         sql_query_save = "INSERT INTO RepoCategories (id_repo, id_category)" + \
                         " VALUES (:id_repo, :id_category)"
         save_data = (repo.id, category.id)

@@ -196,7 +196,7 @@ def export_data(args, extra_args):
     writer = csv.writer(open(filename, 'w'))
     fields_names = ['RepoId', \
                     'Path',\
-                    'Update command',\
+                    'UpdateCommand',\
                     'Category'
     ]
     writer.writerow([unicode(s).encode("utf-8") for s in fields_names])

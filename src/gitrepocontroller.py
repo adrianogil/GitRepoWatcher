@@ -25,6 +25,7 @@ import commands.save_repo_command
 import commands.move_head_command
 import commands.get_info_command
 import commands.execute_command
+import commands.import_command
 import commands.edit_command
 
 class OperationObject:
@@ -69,9 +70,13 @@ class GitRepoController:
             '--save'       : commands.save_repo_command.execute,
             '--update'     : commands.update_batch_command.execute,
             '--exec'       : commands.execute_command.execute,
+            '--import'     : commands.import_command.execute,
             'no-args'      : self.handle_no_args,
         }
         return commands_parse
+
+    def get_git_root(self, path):
+        return gitcommands.get_git_root(path)
 
     def update_gitrepo(self, repo):
         update_command = 'cd "' + repo.path + '" && ' + repo.update_command
@@ -122,8 +127,8 @@ class GitRepoController:
 
     # Return category object
     def get_category(self, category_name):
-        if category_name == self.categoryDAO.default_category.name:
-            return [self.categoryDAO.default_category]
+        if category_name.lower() == self.categoryDAO.default_category.name.lower():
+            return self.categoryDAO.default_category
 
         cat_obj = self.categoryDAO.get(category_name)
         if cat_obj is None:
