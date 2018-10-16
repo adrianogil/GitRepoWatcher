@@ -25,6 +25,7 @@ import commands.save_repo_command
 import commands.move_head_command
 import commands.get_info_command
 import commands.execute_command
+import commands.edit_command
 
 class OperationObject:
     def __init__(self, operation_success, data):
@@ -59,6 +60,7 @@ class GitRepoController:
             '-i'           : commands.get_info_command.execute,
             '-u'           : commands.update_batch_command.execute,
             '-d'           : commands.delete_repo_command.execute,
+            '-e'           : commands.edit_command.execute,
             '-up'          : commands.move_head_command.execute,
             '-pc'          : commands.push_commits_command.execute,
             '--stats'      : commands.commit_stats_command.execute,
@@ -89,6 +91,9 @@ class GitRepoController:
         saved_repo = self.repoDAO.save(repo)
         return OperationObject(saved_repo is not None, saved_repo)
 
+    def update_edit(self, repo):
+        saved_repo = self.repoDAO.update(repo)
+
     def get_repos(self, conditions=[]):
         return self.repoDAO.get_all(conditions)
 
@@ -114,6 +119,16 @@ class GitRepoController:
     def delete_repos(self, repos):
         for r in repos:
             self.repoDAO.delete(r)
+
+    # Return category object
+    def get_category(self, category_name):
+        if category_name == self.categoryDAO.default_category.name:
+            return [self.categoryDAO.default_category]
+
+        cat_obj = self.categoryDAO.get(category_name)
+        if cat_obj is None:
+            cat_obj = self.categoryDAO.save(category_name)
+        return cat_obj
 
     def get_search_conditions(self, args, extra_args):
 

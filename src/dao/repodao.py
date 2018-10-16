@@ -111,16 +111,22 @@ class RepoDAO:
         repo = self.entity_factory.create_repo(repo_args)
         return repo
 
-    def update(self, moneyRegister):
-        sql_query_update = "UPDATE FinancialRegisters SET description = ?," + \
-                                                             " amount = ?," + \
-                                                        " register_dt = ?," + \
-                                                        " id_category = ?, " + \
-                                                        " id_account = ? " + \
-                                              " WHERE id_register = ?"
-        update_data = moneyRegister.get_data_tuple() + (moneyRegister.id,)
+    def update(self, repo):
+
+        sql_query_update = "UPDATE RepoWatcher SET " + \
+                            " repo_name = ?, " + \
+                            " repo_path = ?, " + \
+                            " update_command = ?, " + \
+                            " operation_time = ? " + \
+                            " WHERE id_repo = ? "
+        update_data = repo.get_data_tuple(True) + (repo.id,)
+        print("DEBUG: repodao - save - " + str(update_data))
         self.cursor.execute(sql_query_update, update_data)
         self.conn.commit()
+
+        self.categoryDAO.update_from(repo)
+
+        return repo
 
     def delete(self, repo):
         sql_query_delete = "DELETE FROM RepoWatcher WHERE id_repo=?"
