@@ -5,6 +5,10 @@ import utils
 
 import gitcommands
 
+import csv
+import codecs
+import locale
+
 list_args = '--save -s'
 
 # Open Connection
@@ -182,6 +186,33 @@ def move_head_to_upstream(args, extra_args):
         for r in new_commits:
             print(' - ' + r + ': ' + new_commits[r] + ' new commits')
 
+
+def export_data(args, extra_args):
+    
+    filename = args[0]
+
+    c.execute("SELECT * from Repo ORDER BY id_repo")
+    
+    writer = csv.writer(open(filename, 'w'))
+    fields_names = ['RepoId', \
+                    'Path',\
+                    'Update command',\
+                    'Category'
+    ]
+    writer.writerow([unicode(s).encode("utf-8") for s in fields_names])
+
+    index = 0
+    for row in c:
+        # print('Repo ' + str(index) + ': ' + str(row[1]) + " (ID: " + str(row[0]) + ")")
+        # print('- path: ' + str(row[2]))
+        # print('- category: ' + str(row[3]))
+        # print('- update command: ' + str(row[4]))
+        row_data = [row[0], \
+                    row[2], \
+                    row[4], \
+                    row[3]]
+        writer.writerow([unicode(s).encode("utf-8") for s in row_data])
+        index = index + 1
 
 def list_all_saved_repo(args, extra_args):
     if len(args) == 0:
@@ -426,6 +457,7 @@ commands_parse = {
     '--today'      : get_commits_of_today,
     '--update'     : update_in_batch,
     '--delete-all' : delete_all_repos,
+    '--export'     : export_data,
     'no-args'      : handle_no_args,
 }
 
