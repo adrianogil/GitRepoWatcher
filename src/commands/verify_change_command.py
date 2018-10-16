@@ -13,7 +13,7 @@ def execute(args, extra_args, controller):
     index = 0
     for repo in repo_list:
         unstaged = controller.get_unstaged_files(repo)
-        total_commits = controller.get_total_commits(repo)
+        total_commits = controller.get_diverge_commits_to_upstream(repo)
 
         # try:
         index = index + 1

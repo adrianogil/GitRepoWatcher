@@ -18,8 +18,8 @@ def execute(args, extra_args, controller):
                 print(repo_path)
                 print('Current path is not a git project')
                 return
-            
-            repo_path = git_repo_path[:-1]
+
+            repo_path = git_repo_path
             repo_name = os.path.basename(repo_path)
 
             update_command = row['UpdateCommand']
@@ -47,6 +47,5 @@ def execute(args, extra_args, controller):
             else:
                 print('Error while saving repo.')
 
-    
 
-    
+
