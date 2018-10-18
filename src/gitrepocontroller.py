@@ -48,10 +48,10 @@ class GitRepoController:
         self.categoryDAO.create_tables()
         self.repoDAO.create_tables()
 
-    def handle_no_args():
+    def handle_no_args(self):
         print("Default mode: Update and Move HEAD to upstream\n")
-        commands.update_batch_command.execute([], [])
-        commands.move_head_command.execute([], [])
+        commands.update_batch_command.execute([], [], self)
+        commands.move_head_command.execute([], [], self)
 
     def get_commands(self):
         commands_parse = {

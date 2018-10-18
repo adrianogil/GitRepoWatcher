@@ -17,11 +17,6 @@ controller = GitRepoController(db_directory)
 
 commands_parse = controller.get_commands()
 
-def handle_no_args():
-    print("Default mode: Update and Move HEAD to upstream\n")
-    update_in_batch([], [])
-    move_head_to_upstream([], [])
-
 def parse_arguments():
 
     args = {}
@@ -29,7 +24,7 @@ def parse_arguments():
     last_key = ''
 
     if len(sys.argv) == 1:
-        handle_no_args()
+        controller.handle_no_args()
         return None
 
     for i in xrange(1, len(sys.argv)):
