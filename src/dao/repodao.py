@@ -35,29 +35,29 @@ class RepoDAO:
 
         return repo
 
-    def add_condition(self, query_conditions, condition):
+    def add_condition(self, query_conditions, condition, add_mode=' ADD '):
         if query_conditions == '':
             return condition
         else:
-            return query_conditions + ' ADD ' + condition
+            return query_conditions + add_mode + condition
 
-    def build_query_condition(self, conditions):
+    def build_query_condition(self, conditions, add_mode=' ADD '):
         query_conditions = ""
         conditions_data = ()
 
         if 'id' in conditions:
             id_conditions = "id_repo LIKE ?"
-            query_conditions = self.add_condition(query_conditions, id_conditions)
+            query_conditions = self.add_condition(query_conditions, id_conditions, add_mode)
             conditions_data = conditions_data + (conditions['id'],)
 
         if 'path' in conditions:
             path_conditions = "repo_path LIKE ?"
-            query_conditions = self.add_condition(query_conditions, path_conditions)
+            query_conditions = self.add_condition(query_conditions, path_conditions, add_mode)
             conditions_data = conditions_data + (conditions['path'],)
 
         if 'update_command' in conditions:
             command_conditions = "update_command LIKE ?"
-            query_conditions = self.add_condition(query_conditions, command_conditions)
+            query_conditions = self.add_condition(query_conditions, command_conditions, add_mode)
             conditions_data = conditions_data + (conditions['update_command'],)
 
         return (query_conditions, conditions_data)
@@ -69,7 +69,7 @@ class RepoDAO:
         if len(conditions) == 0:
             self.cursor.execute(sql_query_get_all)
         else:
-            query_conditions, conditions_data = self.build_query_condition(conditions)
+            query_conditions, conditions_data = self.build_query_condition(conditions, ' OR ')
             # print('DEBUG: repodao - get_all - ' + query_conditions)
             sql_query_get_all = sql_query_get_all + " WHERE " + query_conditions
             self.cursor.execute(sql_query_get_all, conditions_data)
@@ -143,7 +143,7 @@ class RepoDAO:
         return repo
 
     def delete(self, repo):
-        sql_query_delete = "DELETE FROM RepoWatcher WHERE id_repo=?"
+        sql_query_delete = "DELETE FROM RepoWatcher WHERE id_repo=? "
         delete_data = (repo.id,)
         self.cursor.execute(sql_query_delete, delete_data)
         self.conn.commit()
