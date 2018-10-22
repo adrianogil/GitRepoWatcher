@@ -26,6 +26,7 @@ import commands.move_head_command
 import commands.get_info_command
 import commands.execute_command
 import commands.import_command
+import commands.export_command
 import commands.edit_command
 
 class OperationObject:
@@ -71,6 +72,7 @@ class GitRepoController:
             '--update'     : commands.update_batch_command.execute,
             '--exec'       : commands.execute_command.execute,
             '--import'     : commands.import_command.execute,
+            '--export'     : commands.export_command.execute,
             'no-args'      : self.handle_no_args,
         }
         return commands_parse
@@ -99,7 +101,7 @@ class GitRepoController:
     def update_edit(self, repo):
         saved_repo = self.repoDAO.update(repo)
 
-    def get_repos(self, conditions=[]):
+    def get_repos(self, conditions={}):
         return self.repoDAO.get_all(conditions)
 
     def get_unstaged_files(self, repo):
@@ -137,18 +139,19 @@ class GitRepoController:
 
     def get_search_conditions(self, args, extra_args):
 
+        if '--all' in extra_args:
+                return {}
+
         search_conditions = {}
 
         def add_category(cat):
+
             if 'categories' in search_conditions:
                 cat_list = search_conditions['categories']
                 cat_list.append(cat)
                 search_conditions['categories'] = cat_list
             else:
                 search_conditions['categories'] = [cat]
-
-        if '--all' in extra_args:
-            return {}
 
         for a in args:
             if utils.is_int(a):
@@ -212,5 +215,5 @@ class GitRepoController:
         return gitcommands.get_total_commits(repo.path)
 
     def get_today_commits(self, repo):
-        
+
         return gitcommands.get_today_commits(repo.path)
