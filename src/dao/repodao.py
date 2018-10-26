@@ -63,6 +63,14 @@ class RepoDAO:
         return (query_conditions, conditions_data)
 
 
+    def contains_categories(self, repo, target_categories):
+        for c in target_categories:
+            for rc in repo.categories:
+                if c == rc.name:
+                    return True
+        return False
+
+
     def get_all(self, conditions=[]):
 
         sql_query_get_all = "SELECT * FROM RepoWatcher"
@@ -70,8 +78,9 @@ class RepoDAO:
             self.cursor.execute(sql_query_get_all)
         else:
             query_conditions, conditions_data = self.build_query_condition(conditions, ' OR ')
-            # print('DEBUG: repodao - get_all - ' + query_conditions)
-            sql_query_get_all = sql_query_get_all + " WHERE " + query_conditions
+            print('DEBUG: repodao - get_all - ' + query_conditions)
+            if len(query_conditions) > 0:
+                sql_query_get_all = sql_query_get_all + " WHERE " + query_conditions
             self.cursor.execute(sql_query_get_all, conditions_data)
 
         rows = self.cursor.fetchall()
@@ -82,7 +91,13 @@ class RepoDAO:
             # print('DEBUG: repodao - get_all - ' + row[1])
             repo = self.parse_repo_from_row(row)
             repo.categories = self.categoryDAO.get_all_from(repo)
-            repo_list.append(repo)
+
+            if 'categories' in conditions:
+                target_categories = conditions['categories']
+                if self.contains_categories(repo, target_categories):
+                    repo_list.append(repo)
+            else:
+                repo_list.append(repo)
 
         return repo_list
 

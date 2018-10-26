@@ -139,10 +139,10 @@ class GitRepoController:
 
     def get_search_conditions(self, args, extra_args):
 
-        if '--all' in extra_args:
-                return {}
-
         search_conditions = {}
+
+        if '--all' in extra_args:
+            return {}
 
         def add_category(cat):
 
@@ -167,10 +167,10 @@ class GitRepoController:
             for c in extra_args['-cs']:
                 add_category(c)
 
-        if not 'path' in search_conditions:
-            search_conditions['path'] = gitcommands.get_git_root(os.getcwd())
+        # if not 'path' in search_conditions:
+        #     search_conditions['path'] = gitcommands.get_git_root(os.getcwd())
 
-        # print('DEBUG: search_conditions - ' + str(search_conditions))
+        print('DEBUG: search_conditions - ' + str(search_conditions))
 
         return search_conditions
 
