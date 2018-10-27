@@ -170,7 +170,7 @@ class GitRepoController:
         # if not 'path' in search_conditions:
         #     search_conditions['path'] = gitcommands.get_git_root(os.getcwd())
 
-        print('DEBUG: search_conditions - ' + str(search_conditions))
+        # print('DEBUG: search_conditions - ' + str(search_conditions))
 
         return search_conditions
 

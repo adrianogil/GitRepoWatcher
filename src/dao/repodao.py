@@ -78,7 +78,7 @@ class RepoDAO:
             self.cursor.execute(sql_query_get_all)
         else:
             query_conditions, conditions_data = self.build_query_condition(conditions, ' OR ')
-            print('DEBUG: repodao - get_all - ' + query_conditions)
+            # print('DEBUG: repodao - get_all - ' + query_conditions)
             if len(query_conditions) > 0:
                 sql_query_get_all = sql_query_get_all + " WHERE " + query_conditions
             self.cursor.execute(sql_query_get_all, conditions_data)
