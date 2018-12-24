@@ -92,9 +92,7 @@ class GitRepoController:
         diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
         print(diverge_commits + ' new commits')
 
-
     def save_repo(self, repo):
-
         saved_repo = self.repoDAO.save(repo)
         return OperationObject(saved_repo is not None, saved_repo)
 
