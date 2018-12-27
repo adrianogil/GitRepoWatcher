@@ -18,13 +18,14 @@ def execute(args, extra_args, controller):
         if total_today_commits > 0:
             report_data[repo.name] = {}
             report_data[repo.name]['repo-id'] = repo.id
+            report_data[repo.name]['repo-path'] = repo.path
             total_commits_in_all_repos = total_commits_in_all_repos + total_today_commits
             commits = []
             for c in today_commits_msgs:
                 commit_data = {}
 
-                commit_data['commit_id'] = c.split(' ')[0]
-                commit_data['commit_msg'] = c[len(c.split(' ')[0]):].strip()
+                commit_data['commit-id'] = c.split(' ')[0]
+                commit_data['commit-msg'] = c[len(c.split(' ')[0]):].strip()
 
                 commits.append(commit_data)
             report_data[repo.name]['commits'] = commits
@@ -41,6 +42,6 @@ def execute(args, extra_args, controller):
             print('Repo %s (Id %s) ' % (r, report_data[r]['repo-id']))
             total_commits_in_all_repos = total_commits_in_all_repos + total_today_commits
             for c in report_data[r]['commits']:
-                print(c['commit_id'] + " " + c['commit_msg'])
+                print(c['commit-id'] + " " + c['commit-msg'])
         print("###################################################")
         print('Today, there were generated %s commits in %s repos.' % (total_commits_in_all_repos, index))
