@@ -11,7 +11,7 @@ from gitrepocontroller import GitRepoController
 # Wrap sys.stdout into a StreamWriter to allow writing unicode.
 sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
-db_directory = os.environ['GIT_REPO_WATCHER_DIR'] + '/db/'
+db_directory = os.environ['GIT_REPO_WATCHER_DIR'] + '/../db/'
 
 controller = GitRepoController(db_directory)
 
