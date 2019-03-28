@@ -29,6 +29,8 @@ import commands.import_command
 import commands.export_command
 import commands.edit_command
 
+import commands.list_categories_command
+
 class OperationObject:
     def __init__(self, operation_success, data):
         self.success = operation_success
@@ -65,9 +67,11 @@ class GitRepoController:
             '-e'           : commands.edit_command.execute,
             '-up'          : commands.move_head_command.execute,
             '-pc'          : commands.push_commits_command.execute,
+            '-lc'          : commands.list_categories_command.execute,
             '--stats'      : commands.commit_stats_command.execute,
             '--today'      : commands.today_commits_command.execute,
             '--list'       : commands.list_repos_command.execute,
+            '--list-categories': commands.list_categories_command.execute,
             '--save'       : commands.save_repo_command.execute,
             '--update'     : commands.update_batch_command.execute,
             '--exec'       : commands.execute_command.execute,
@@ -99,8 +103,11 @@ class GitRepoController:
     def update_edit(self, repo):
         saved_repo = self.repoDAO.update(repo)
 
-    def get_repos(self, conditions={}):
+    def get_repos(self):
         return self.repoDAO.get_all(conditions)
+
+    def get_categories(self, conditions={}):
+        return self.categoryDAO.get_all()
 
     def get_unstaged_files(self, repo):
         current_repo = repo.name

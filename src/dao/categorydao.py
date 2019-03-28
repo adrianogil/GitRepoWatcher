@@ -63,7 +63,7 @@ class CategoryDAO:
         self.cursor.execute(sql_query_get)
         category_list = []
         for row in self.cursor:
-            category = self.entityFactory.createCategory(row[1])
+            category = self.entityFactory.create_category(row[1])
             category.id = int(row[0])
 
             category_list.append(category)
