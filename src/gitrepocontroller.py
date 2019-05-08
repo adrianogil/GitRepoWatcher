@@ -103,7 +103,7 @@ class GitRepoController:
     def update_edit(self, repo):
         saved_repo = self.repoDAO.update(repo)
 
-    def get_repos(self):
+    def get_repos(self, conditions):
         return self.repoDAO.get_all(conditions)
 
     def get_categories(self, conditions={}):

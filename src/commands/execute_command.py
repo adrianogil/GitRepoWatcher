@@ -14,7 +14,7 @@ def execute(args, extra_args, controller):
     if len(args) > 0:
         command_batch = args[0]
 
-    search_conditions = controller.get_search_conditions(args, extra_args)
+    search_conditions = controller.get_search_conditions(args[1:], extra_args)
     repo_list = controller.get_repos(search_conditions)
 
     total_commits_in_all_repos = 0
