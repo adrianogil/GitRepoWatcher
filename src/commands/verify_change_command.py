@@ -6,7 +6,8 @@ def execute(args, extra_args, controller):
     # elif len(args) > 0:
     #     category = args[0]
 
-    repo_list = controller.get_repos()
+    search_conditions = controller.get_search_conditions(args, extra_args)
+    repo_list = controller.get_repos(search_conditions)
 
     unstaged_repos = []
 
