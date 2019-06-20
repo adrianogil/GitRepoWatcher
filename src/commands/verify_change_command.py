@@ -13,23 +13,24 @@ def execute(args, extra_args, controller):
 
     index = 0
     for repo in repo_list:
-        unstaged = controller.get_unstaged_files(repo)
-        total_commits = controller.get_diverge_commits_to_upstream(repo)
+        try:
+            unstaged = controller.get_unstaged_files(repo)
+            total_commits = controller.get_diverge_commits_to_upstream(repo)
 
-        # try:
-        index = index + 1
-        print("###################################################")
-        current_repo = repo.name
+            # try:
+            index = index + 1
+            print("###################################################")
+            current_repo = repo.name
 
-        if unstaged != '0':
-            print('There are unstaged changes in repo!')
-            unstaged_repos.append({'id' : repo.id, 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
-        else:
-            if total_commits != '0':
-                print('There are commits to be sent to upstream!')
+            if unstaged != '0':
+                print('There are unstaged changes in repo!')
                 unstaged_repos.append({'id' : repo.id, 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
-        # except:
-            # print("Caught error when handling repo " + str(current_repo))
+            else:
+                if total_commits != '0':
+                    print('There are commits to be sent to upstream!')
+                    unstaged_repos.append({'id' : repo.id, 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
+        except:
+            print("Caught error when handling repo " + str(current_repo))
     print("###################################################")
 
     total_unstaged = len(unstaged_repos)
