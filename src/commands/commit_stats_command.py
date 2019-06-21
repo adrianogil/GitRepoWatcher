@@ -8,10 +8,13 @@ def execute(args, extra_args, controller):
     index = 0
 
     for repo in repo_list:
-        print('Repo %s (Id %s) ' % (repo.name,repo.id))
-        total_commits = controller.get_total_commits(repo)
-        print('  Total commits: ' + str(total_commits))
-        total_commits_in_all_repos = total_commits_in_all_repos + total_commits
-
+        try:
+            print('Repo %s (Id %s) ' % (repo.name,repo.id))
+            total_commits = controller.get_total_commits(repo)
+            print('  Total commits: ' + str(total_commits))
+            total_commits_in_all_repos = total_commits_in_all_repos + total_commits
+        except:
+            print("Caught error when handling repo " + str(index))
         index = index + 1
+
     print('Commits in all repos: ' + str(total_commits_in_all_repos))
