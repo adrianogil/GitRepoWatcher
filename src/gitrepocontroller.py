@@ -14,6 +14,7 @@ from entity.entityfactory import EntityFactory
 
 importutils.addpath(__file__, 'commands')
 
+import commands.fix_broken_path_command
 import commands.verify_change_command
 import commands.today_commits_command
 import commands.push_commits_command
@@ -65,6 +66,7 @@ class GitRepoController:
             '-u'           : commands.update_batch_command.execute,
             '-d'           : commands.delete_repo_command.execute,
             '-e'           : commands.edit_command.execute,
+            '-x'           : commands.fix_broken_path_command.execute,
             '-up'          : commands.move_head_command.execute,
             '-pc'          : commands.push_commits_command.execute,
             '-lc'          : commands.list_categories_command.execute,
@@ -74,6 +76,7 @@ class GitRepoController:
             '--list-categories': commands.list_categories_command.execute,
             '--save'       : commands.save_repo_command.execute,
             '--update'     : commands.update_batch_command.execute,
+            '--fix'           : commands.fix_broken_path_command.execute,
             '--exec'       : commands.execute_command.execute,
             '--import'     : commands.import_command.execute,
             '--export'     : commands.export_command.execute,
