@@ -7,7 +7,9 @@ def execute(args, extra_args, controller):
     total_commits_in_all_repos = 0
     index = 0
 
-    for repo in repo_list:
+    ordered_repo_list = sorted(repo_list, key=lambda x: controller.get_total_commits(x), reverse=True)
+
+    for repo in ordered_repo_list:
         try:
             print('Repo %s (Id %s) ' % (repo.name,repo.id))
             total_commits = controller.get_total_commits(repo)
