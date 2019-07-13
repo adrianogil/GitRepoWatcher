@@ -39,6 +39,10 @@ class OperationObject:
 
 class GitRepoController:
     def __init__(self, db_directory):
+
+        if not os.path.exists(db_directory):
+            os.makedirs(db_directory)
+
         # Open Connection
         conn = sqlite3.connect(db_directory + 'gitrepowatcher.sqlite');
 
@@ -98,6 +102,8 @@ class GitRepoController:
 
         diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
         print(diverge_commits + ' new commits')
+
+        return diverge_commits
 
     def save_repo(self, repo):
         saved_repo = self.repoDAO.save(repo)

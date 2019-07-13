@@ -80,12 +80,18 @@ repo-watcher --today
 
 ## Installation
 
+In case you have gil-install command, you just need to type:
+
+```
+cd <Gitrepowatcher-path>
+gil-install -i
+```
+
 Add the following lines to your bashrc:
 ```
 export GIT_REPO_WATCHER_DIR=<path-to-gitrepowatcher>
 source $GIT_REPO_WATCHER_DIR/src/bashrc.sh
 ```
-(WIP I am going to create a better setup)
 
 ## Contributing
 
