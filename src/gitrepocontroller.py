@@ -17,6 +17,7 @@ importutils.addpath(__file__, 'commands')
 import commands.fix_broken_path_command
 import commands.verify_change_command
 import commands.today_commits_command
+import commands.last_commits_command
 import commands.push_commits_command
 import commands.update_batch_command
 import commands.commit_stats_command
@@ -74,10 +75,12 @@ class GitRepoController:
             '-up'          : commands.move_head_command.execute,
             '-pc'          : commands.push_commits_command.execute,
             '-lc'          : commands.list_categories_command.execute,
+            '-ld'         : commands.last_commits_command.execute,
             '--stats'      : commands.commit_stats_command.execute,
             '--today'      : commands.today_commits_command.execute,
             '--list'       : commands.list_repos_command.execute,
             '--list-categories': commands.list_categories_command.execute,
+            '--last-commit-date': commands.last_commits_command.execute,
             '--save'       : commands.save_repo_command.execute,
             '--update'     : commands.update_batch_command.execute,
             '--fix'           : commands.fix_broken_path_command.execute,
@@ -231,3 +234,11 @@ class GitRepoController:
     def get_today_commits(self, repo):
 
         return gitcommands.get_today_commits(repo.path)
+
+    def get_last_commit(self, repo):
+
+        return gitcommands.get_last_commit(repo.path)
+
+    def get_last_commit_date(self, repo):
+
+        return gitcommands.get_last_commit_date(repo.path)

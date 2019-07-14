@@ -80,3 +80,22 @@ def get_today_commits(path):
 
 
     return today_commits
+
+
+def get_last_commit(path):
+
+    get_last_commit = "git log --pretty=format:'%h %ad | %s%d [%an]' --date=short | head -1"
+    get_last_commit_command = 'cd "' + path + '" && ' + get_last_commit
+    last_commit_output = subprocess.check_output(get_last_commit_command, shell=True)
+    last_commit_output = last_commit_output.strip()
+
+    return last_commit_output
+
+def get_last_commit_date(path):
+
+    get_last_commit = "git log --pretty=format:'%ad' --date=short | head -1"
+    get_last_commit_command = 'cd "' + path + '" && ' + get_last_commit
+    last_commit_output = subprocess.check_output(get_last_commit_command, shell=True)
+    last_commit_output = last_commit_output.strip()
+
+    return last_commit_output
