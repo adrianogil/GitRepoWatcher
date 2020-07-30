@@ -6,12 +6,15 @@ def execute(args, extra_args, controller):
     search_conditions = controller.get_search_conditions(args, extra_args)
     repo_list = controller.get_repos(search_conditions)
     for repo in repo_list:
-        print("###################################################")
-        print('Repo ' + str(repo.id) + ': Updating ' + repo.name)
-        new_commits = controller.update_gitrepo(repo)
-        new_commits = int(new_commits)
-        if new_commits > 0:
-            notify_new_commits(repo.name, new_commits)
+        try:
+            print("###################################################")
+            print('Repo ' + str(repo.id) + ': Updating ' + repo.name)
+            new_commits = controller.update_gitrepo(repo)
+            new_commits = int(new_commits)
+            if new_commits > 0:
+                notify_new_commits(repo.name, new_commits)
+        except Exception as exception:
+            print("Got some errors when updated %s repo: %s" % (repo.name, exception))
 
 
 def is_termux():
