@@ -20,7 +20,7 @@ Save a repo with a specific update command and a category
 repo-watcher -s <category> <update-command>
 ```
 
-Update all saved repos. It will can the update command of each registered repo.
+Update all saved repos. Each registered repo will be updated using their corresponding update command.
 ```
 repo-watcher --update [<category>]
 ```
