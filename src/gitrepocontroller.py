@@ -33,6 +33,7 @@ import commands.edit_command
 
 import commands.list_categories_command
 
+
 class OperationObject:
     def __init__(self, operation_success, data):
         self.success = operation_success
@@ -95,16 +96,22 @@ class GitRepoController:
         return gitcommands.get_git_root(path)
 
     def update_gitrepo(self, repo):
+        diverge_commits = ""
+
         update_command = 'cd "' + repo.path + '" && ' + repo.update_command
 
         def preexec_function():
             os.setpgrp()
 
-        update_output = subprocess.check_output(update_command, shell=True, stdin=subprocess.PIPE, preexec_fn=preexec_function)
-        print(update_output)
+        try:
+            update_output = subprocess.check_output(update_command, shell=True, stdin=subprocess.PIPE, preexec_fn=preexec_function)
+            print(update_output)
 
-        diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
-        print(diverge_commits + ' new commits')
+            diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
+            print(diverge_commits + ' new commits')
+        except:
+            print("error while updating %s" % (repo.name,))
+
 
         return diverge_commits
 
