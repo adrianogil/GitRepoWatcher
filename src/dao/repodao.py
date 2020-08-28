@@ -70,8 +70,9 @@ class RepoDAO:
                     return True
         return False
 
-
-    def get_all(self, conditions=[]):
+    def get_all(self, conditions=None):
+        if conditions is None:
+            conditions = []
 
         sql_query_get_all = "SELECT * FROM RepoWatcher"
         if len(conditions) == 0:
@@ -128,13 +129,20 @@ class RepoDAO:
 
         return repo
 
+    def convert_to_str(self, str_value):
+        try:
+            str_value = str_value.decode('utf-8')
+        except Exception as _:
+            str_value = str(str_value)
+
+        return str_value
 
     def parse_repo_from_row(self, row):
         repo_args = {
             "id"             : int(row[0]),
-            "name"           : row[1],
-            "path"           : row[2],
-            "update_command" : row[3],
+            "name"           : self.convert_to_str(row[1]),
+            "path"           : self.convert_to_str(row[2]),
+            "update_command" : self.convert_to_str(row[3]),
         }
 
         repo = self.entity_factory.create_repo(repo_args)

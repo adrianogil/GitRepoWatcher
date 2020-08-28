@@ -112,7 +112,6 @@ class GitRepoController:
         except:
             print("error while updating %s" % (repo.name,))
 
-
         return diverge_commits
 
     def save_repo(self, repo):
