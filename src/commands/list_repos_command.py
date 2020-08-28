@@ -15,6 +15,6 @@ def execute(args, extra_args, controller):
         print('- path: ' + str(repo.path))
         print('- categories: ')
         for c in repo.categories:
-            print('--\t' + c.name)
+            print('\t- ' + c.name)
         print('- update command: ' + str(repo.update_command))
         index = index + 1

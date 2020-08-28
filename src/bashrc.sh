@@ -6,8 +6,8 @@
 MAIN_SCRIPT=gitrepowatcher.py
 OLD_SCRIPT=gitrepowatcher_old.py
 
-alias repo-watcher='python2 $GIT_REPO_WATCHER_DIR/$MAIN_SCRIPT'
-alias rw='python2 $GIT_REPO_WATCHER_DIR/$MAIN_SCRIPT'
+alias repo-watcher='python3 $GIT_REPO_WATCHER_DIR/$MAIN_SCRIPT'
+alias rw='python3 $GIT_REPO_WATCHER_DIR/$MAIN_SCRIPT'
 alias rwc='rw -c'
 
 

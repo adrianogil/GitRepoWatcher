@@ -11,24 +11,27 @@ def execute(args, extra_args, controller):
     report_data = {}
 
     for repo in repo_list:
-        today_commits_msgs = controller.get_today_commits(repo)
-        total_today_commits = len(today_commits_msgs)
-        index = index + 1
+        try:
+            today_commits_msgs = controller.get_today_commits(repo)
+            total_today_commits = len(today_commits_msgs)
+            index = index + 1
 
-        if total_today_commits > 0:
-            report_data[repo.name] = {}
-            report_data[repo.name]['repo-id'] = repo.id
-            report_data[repo.name]['repo-path'] = repo.path
-            total_commits_in_all_repos = total_commits_in_all_repos + total_today_commits
-            commits = []
-            for c in today_commits_msgs:
-                commit_data = {}
+            if total_today_commits > 0:
+                report_data[repo.name] = {}
+                report_data[repo.name]['repo-id'] = repo.id
+                report_data[repo.name]['repo-path'] = repo.path
+                total_commits_in_all_repos = total_commits_in_all_repos + total_today_commits
+                commits = []
+                for c in today_commits_msgs:
+                    commit_data = {}
 
-                commit_data['commit-id'] = c.split(' ')[0]
-                commit_data['commit-msg'] = c[len(c.split(' ')[0]):].strip()
+                    commit_data['commit-id'] = c.split(' ')[0]
+                    commit_data['commit-msg'] = c[len(c.split(' ')[0]):].strip()
 
-                commits.append(commit_data)
-            report_data[repo.name]['commits'] = commits
+                    commits.append(commit_data)
+                report_data[repo.name]['commits'] = commits
+        except Exception as error:
+            print(error)
 
     if '--json' in extra_args:
         # json_data = ['report', report_data]

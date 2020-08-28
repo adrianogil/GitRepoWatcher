@@ -1,15 +1,15 @@
-
-import sys, os, subprocess
+import sys
+import os
 
 import utils
 
-import codecs
-import locale
+# import codecs
+# import locale
 
 from gitrepocontroller import GitRepoController
 
 # Wrap sys.stdout into a StreamWriter to allow writing unicode.
-sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
 db_directory = os.environ['GIT_REPO_WATCHER_DIR'] + '/../db/'
 
@@ -27,7 +27,7 @@ def parse_arguments():
         controller.handle_no_args()
         return None
 
-    for i in xrange(1, len(sys.argv)):
+    for i in range(1, len(sys.argv)):
         a = sys.argv[i]
         if a[0] == '-' and not utils.is_float(a):
             last_key = a
@@ -39,6 +39,7 @@ def parse_arguments():
 
     return args
 
+
 def parse_commands(args):
     if args is None:
         return
@@ -47,6 +48,7 @@ def parse_commands(args):
     for a in args:
         if a in commands_parse:
             commands_parse[a](args[a], args, controller)
+
 
 args = parse_arguments()
 parse_commands(args)
