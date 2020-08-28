@@ -5,6 +5,14 @@ import subprocess
 from subprocess import *
 
 
+def get_unstaged_files(repo_path):
+    get_unstaged_files = 'git diff --numstat | wc -l'
+    get_unstaged_command = 'cd "' + repo_path + '" && ' + get_unstaged_files
+    unstaged = run_cmd(get_unstaged_command)
+
+    return unstaged
+
+
 def get_git_root(p):
     """Return None if p is not in a git repo, or the root of the repo if it is"""
     if call(["git", "branch"], stderr=STDOUT, stdout=open(os.devnull, 'w'), cwd=p) != 0:
@@ -14,14 +22,15 @@ def get_git_root(p):
         root = root.strip()
         return root
 
+
 def get_upstream_name(path):
     get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
     get_upstream_command = 'cd "' + path + '" && ' + get_upstream_name
     # print(get_upstream_command)
-    upstream = subprocess.check_output(get_upstream_command, shell=True)
-    upstream = upstream.strip()
+    upstream = run_cmd(get_upstream_command)
 
     return upstream
+
 
 def push_commits_to_upstream(path):
     upstream = get_upstream_name(path)
@@ -30,28 +39,27 @@ def push_commits_to_upstream(path):
     push_commits = 'git push ' + upstream + ''
     push_commits_command = 'cd "' + path + '" && ' + push_commits
     # print(push_commits_command)
-    push_commits_output = subprocess.check_output(push_commits_command, shell=True)
-    push_commits_output = push_commits_output.strip()
+    push_commits_output = run_cmd(push_commits_command)
 
     return push_commits_output
+
 
 def get_diverge_commits_HEAD_to_upstream(path):
     upstream = get_upstream_name(path)
 
     get_diverge_commits = 'git log HEAD..' + upstream + ' --pretty=oneline | wc -l'
     get_diverge_commits_command = 'cd "' + path + '" && ' + get_diverge_commits
-    diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
-    diverge_commits = diverge_commits.strip()
+    diverge_commits = run_cmd(get_diverge_commits_command)
 
     return diverge_commits
+
 
 def get_diverge_commits_upstream_to_HEAD(path):
     upstream = get_upstream_name(path)
 
     get_diverge_commits = 'git log ' + upstream + '..HEAD --pretty=oneline | wc -l'
     get_diverge_commits_command = 'cd "' + path + '" && ' + get_diverge_commits
-    diverge_commits = subprocess.check_output(get_diverge_commits_command, shell=True)
-    diverge_commits = diverge_commits.strip()
+    diverge_commits = run_cmd(get_diverge_commits_command)
 
     return diverge_commits
 

@@ -130,15 +130,7 @@ class GitRepoController:
     def get_unstaged_files(self, repo):
         current_repo = repo.name
         print('Repo ' + str(repo.id) + ': Verify changes in ' + current_repo)
-        get_upstream_name = ' git rev-parse --abbrev-ref --symbolic-full-name @{u}'
-        get_upstream_command = 'cd "' + repo.path + '" && ' + get_upstream_name
-        upstream = subprocess.check_output(get_upstream_command, shell=True)
-        upstream = upstream.strip()
-
-        get_unstaged_files = 'git diff --numstat | wc -l'
-        get_unstaged_command = 'cd "' + repo.path + '" && ' + get_unstaged_files
-        unstaged = subprocess.check_output(get_unstaged_command, shell=True)
-        unstaged = unstaged.strip()
+        unstaged = gitcommands.get_unstaged_files(repo.path)
 
         return unstaged
 
@@ -206,15 +198,6 @@ class GitRepoController:
         diverge_commits = gitcommands.get_diverge_commits_upstream_to_HEAD(repo.path)
 
         return diverge_commits
-
-
-    def get_unstaged_files(self, repo):
-        get_unstaged_files = 'git diff --numstat | wc -l'
-        get_unstaged_command = 'cd "' + repo.path + '" && ' + get_unstaged_files
-        unstaged = subprocess.check_output(get_unstaged_command, shell=True)
-        unstaged = unstaged.strip()
-
-        return unstaged
 
     def move_to_upstream(self, repo):
         upstream = gitcommands.get_upstream_name(repo.path)
