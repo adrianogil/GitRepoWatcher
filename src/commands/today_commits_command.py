@@ -1,4 +1,5 @@
 import json
+import os
 
 
 def execute(args, extra_args, controller):
@@ -12,6 +13,10 @@ def execute(args, extra_args, controller):
 
     for repo in repo_list:
         try:
+            if not os.path.exists(repo.path):
+                continue
+            print(repo.path)
+
             today_commits_msgs = controller.get_today_commits(repo)
             total_today_commits = len(today_commits_msgs)
             index = index + 1

@@ -1,6 +1,9 @@
+from pyutils.cli.clitools import run_cmd
+
 import os
 import subprocess
 from subprocess import *
+
 
 def get_git_root(p):
     """Return None if p is not in a git repo, or the root of the repo if it is"""
@@ -67,17 +70,15 @@ def get_today_commits(path):
 
     get_today_commits = 'git log HEAD --pretty=oneline --since=midnight'
     get_today_commits_command = 'cd "' + path + '" && ' + get_today_commits
-    today_commits_output = subprocess.check_output(get_today_commits_command, shell=True)
-    today_commits_output = today_commits_output.strip()
+    today_commits_output = run_cmd(get_today_commits_command)
     today_commits_list = today_commits_output.split('\n')
 
     today_commits = []
 
-    for i in xrange(0, len(today_commits_list)):
+    for i in range(0, len(today_commits_list)):
         today_commits_list[i] = today_commits_list[i].strip()
         if today_commits_list[i] != "":
             today_commits.append(today_commits_list[i])
-
 
     return today_commits
 

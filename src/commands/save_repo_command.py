@@ -2,6 +2,7 @@ import os
 
 from subprocess import *
 
+
 def get_git_root(p):
     """Return None if p is not in a git repo, or the root of the repo if it is"""
     if call(["git", "branch"], stderr=STDOUT, stdout=open(os.devnull, 'w'), cwd=p) != 0:
@@ -9,6 +10,7 @@ def get_git_root(p):
     else:
         root = check_output(["git", "rev-parse", "--show-toplevel"], cwd=p)
         return root
+
 
 def get_categories_from(extra_args, controller):
     if '-c' in extra_args:
@@ -25,6 +27,7 @@ def get_categories_from(extra_args, controller):
         return categories_objs
     else:
         return [controller.categoryDAO.default_category]
+
 
 def execute(args, extra_args, controller):
     print("save_repo_command.py - " + str(args) + " " + str(extra_args))
@@ -47,14 +50,14 @@ def execute(args, extra_args, controller):
         print(repo_path)
         print('Current path is not a git project')
         return
-    
+
     repo_path = git_repo_path[:-1]
     repo_name = os.path.basename(repo_path)
 
-    print('Saving repo ' + repo_name)
-    print('Identified path ' + repo_path)
-    print('Repo Category: ' + str(get_categories_from(extra_args, controller)))
-    print('Using update-command as "' +  update_command + '"')
+    print('Saving repo %s' % (repo_name,))
+    print('Identified path %s' % (repo_path,))
+    print('Repo Category: %s' % (get_categories_from(extra_args, controller),))
+    print('Using update-command as "%s"' % (update_command,))
 
     repo_args = {
         "name"           : repo_name,
