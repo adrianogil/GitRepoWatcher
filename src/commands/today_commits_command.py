@@ -7,7 +7,7 @@ def execute(args, extra_args, controller):
     repo_list = controller.get_repos(search_conditions)
 
     total_commits_in_all_repos = 0
-    index = 0
+    total_repos_with_new_commits = 0
 
     report_data = {}
 
@@ -18,7 +18,8 @@ def execute(args, extra_args, controller):
 
             today_commits_msgs = controller.get_today_commits(repo)
             total_today_commits = len(today_commits_msgs)
-            index = index + 1
+            if total_today_commits > 0:
+                total_repos_with_new_commits += 1
 
             if total_today_commits > 0:
                 report_data[repo.name] = {}
@@ -51,4 +52,4 @@ def execute(args, extra_args, controller):
             for c in report_data[r]['commits']:
                 print(c['commit-id'] + " " + c['commit-msg'])
         print("###################################################")
-        print('Today, there were generated %s commits in %s repos.' % (total_commits_in_all_repos, index))
+        print('Today, there were generated %s commits in %s repos.' % (total_commits_in_all_repos, total_repos_with_new_commits))
