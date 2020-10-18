@@ -9,7 +9,7 @@ def is_float(s):
         return True
     except ValueError:
         pass
- 
+
     return False
 
 
@@ -19,7 +19,7 @@ def is_int(s):
         return True
     except ValueError:
         pass
- 
+
     return False
 
 def get_random(l):

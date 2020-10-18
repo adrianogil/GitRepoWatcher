@@ -1,37 +1,32 @@
-import sqlite3, os
+from repowatcher.dao.repodao import RepoDAO
+from repowatcher.dao.categorydao import CategoryDAO
+from repowatcher.entity.entityfactory import EntityFactory
+
+import repowatcher.gitcommands as gitcommands
+import repowatcher.utils as utils
+
+import repowatcher.commands.list_categories_command as list_categories_command
+import repowatcher.commands.fix_broken_path_command as fix_broken_path_command
+import repowatcher.commands.verify_change_command as verify_change_command
+import repowatcher.commands.today_commits_command as today_commits_command
+import repowatcher.commands.last_commits_command as last_commits_command
+import repowatcher.commands.push_commits_command as push_commits_command
+import repowatcher.commands.update_batch_command as update_batch_command
+import repowatcher.commands.commit_stats_command as commit_stats_command
+import repowatcher.commands.delete_repo_command as delete_repo_command
+import repowatcher.commands.list_repos_command as list_repos_command
+import repowatcher.commands.save_repo_command as save_repo_command
+import repowatcher.commands.move_head_command as move_head_command
+import repowatcher.commands.get_info_command as get_info_command
+import repowatcher.commands.execute_command as execute_command
+import repowatcher.commands.import_command as import_command
+import repowatcher.commands.export_command as export_command
+import repowatcher.commands.edit_command as edit_command
 
 import subprocess
+import sqlite3
+import os
 
-import gitcommands
-import utils, importutils
-
-importutils.addpath(__file__, 'dao')
-from dao.repodao import RepoDAO
-from dao.categorydao import CategoryDAO
-
-importutils.addpath(__file__, 'entity')
-from entity.entityfactory import EntityFactory
-
-importutils.addpath(__file__, 'commands')
-
-import commands.fix_broken_path_command
-import commands.verify_change_command
-import commands.today_commits_command
-import commands.last_commits_command
-import commands.push_commits_command
-import commands.update_batch_command
-import commands.commit_stats_command
-import commands.delete_repo_command
-import commands.list_repos_command
-import commands.save_repo_command
-import commands.move_head_command
-import commands.get_info_command
-import commands.execute_command
-import commands.import_command
-import commands.export_command
-import commands.edit_command
-
-import commands.list_categories_command
 
 
 class OperationObject:
@@ -65,29 +60,29 @@ class GitRepoController:
 
     def get_commands(self):
         commands_parse = {
-            '-c'           : commands.verify_change_command.execute,
-            '-l'           : commands.list_repos_command.execute,
-            '-s'           : commands.save_repo_command.execute,
-            '-i'           : commands.get_info_command.execute,
-            '-u'           : commands.update_batch_command.execute,
-            '-d'           : commands.delete_repo_command.execute,
-            '-e'           : commands.edit_command.execute,
-            '-x'           : commands.fix_broken_path_command.execute,
-            '-up'          : commands.move_head_command.execute,
-            '-pc'          : commands.push_commits_command.execute,
-            '-lc'          : commands.list_categories_command.execute,
-            '-ld'         : commands.last_commits_command.execute,
-            '--stats'      : commands.commit_stats_command.execute,
-            '--today'      : commands.today_commits_command.execute,
-            '--list'       : commands.list_repos_command.execute,
-            '--list-categories': commands.list_categories_command.execute,
-            '--last-commit-date': commands.last_commits_command.execute,
-            '--save'       : commands.save_repo_command.execute,
-            '--update'     : commands.update_batch_command.execute,
-            '--fix'           : commands.fix_broken_path_command.execute,
-            '--exec'       : commands.execute_command.execute,
-            '--import'     : commands.import_command.execute,
-            '--export'     : commands.export_command.execute,
+            '-c'           : verify_change_command.execute,
+            '-l'           : list_repos_command.execute,
+            '-s'           : save_repo_command.execute,
+            '-i'           : get_info_command.execute,
+            '-u'           : update_batch_command.execute,
+            '-d'           : delete_repo_command.execute,
+            '-e'           : edit_command.execute,
+            '-x'           : fix_broken_path_command.execute,
+            '-up'          : move_head_command.execute,
+            '-pc'          : push_commits_command.execute,
+            '-lc'          : list_categories_command.execute,
+            '-ld'         : last_commits_command.execute,
+            '--stats'      : commit_stats_command.execute,
+            '--today'      : today_commits_command.execute,
+            '--list'       : list_repos_command.execute,
+            '--list-categories': list_categories_command.execute,
+            '--last-commit-date': last_commits_command.execute,
+            '--save'       : save_repo_command.execute,
+            '--update'     : update_batch_command.execute,
+            '--fix'           : fix_broken_path_command.execute,
+            '--exec'       : execute_command.execute,
+            '--import'     : import_command.execute,
+            '--export'     : export_command.execute,
             'no-args'      : self.handle_no_args,
         }
         return commands_parse

@@ -1,5 +1,5 @@
+import repowatcher.utils as utils
 
-import utils
 
 class CategoryDAO:
     DEFAULT_CATEGORY = 'default'

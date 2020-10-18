@@ -1,15 +1,10 @@
+from repowatcher.gitrepocontroller import GitRepoController
+
+import repowatcher.utils as utils
+
 import sys
 import os
 
-import utils
-
-# import codecs
-# import locale
-
-from gitrepocontroller import GitRepoController
-
-# Wrap sys.stdout into a StreamWriter to allow writing unicode.
-# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
 db_directory = os.environ['GIT_REPO_WATCHER_DIR'] + '/../db/'
 

@@ -1,13 +1,14 @@
 import datetime
 
+
 class Repo:
     def __init__(self, args):
-        
+
         if 'id' in args:
             self.id = int(args['id'])
         else:
             self.id = -1
-            
+
         if 'name' in args:
             self.name = args['name']
         else:
