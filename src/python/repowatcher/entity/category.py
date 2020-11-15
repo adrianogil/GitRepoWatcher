@@ -1,7 +1,8 @@
 from pyutils.code.classproperties import declare_props
 
+
 class Category:
-    def __init__(self, name=''):
+    def __init__(self, name='Category'):
         declare_props(
             self,
             props={

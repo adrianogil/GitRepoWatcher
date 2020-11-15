@@ -13,11 +13,13 @@ def test_setting_initial_name(category):
     assert category.name == 'Category'
 
 
-@pytest.mark.parametrize('name,expected_name', [
-    ('test', 'test'),
-    (1, '1'),
-    (None, None)
-])
+@pytest.mark.parametrize(
+    'name,expected_name', [
+        ('test', 'test'),
+        (1, '1'),
+        (None, 'Category')
+    ]
+)
 def test_setting_name(name, expected_name):
     category = Category()
     category.name = name
@@ -26,15 +28,17 @@ def test_setting_name(name, expected_name):
     assert category.name == expected_name
 
 
-@pytest.mark.parametrize('id_value,expected_id', [
-    (-1, -1),
-    (0, 0),
-    (1, 1),
-    (100000, 100000),
-    ('1', 1),
-    ('-1', -1),
-    (None, None)
-])
+@pytest.mark.parametrize(
+    'id_value,expected_id', [
+        (-1, -1),
+        (0, 0),
+        (1, 1),
+        (100000, 100000),
+        ('1', 1),
+        ('-1', -1),
+        (None, -1)
+    ]
+)
 def test_setting_id(id_value, expected_id):
     category = Category()
     category.id = id_value
