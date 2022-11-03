@@ -5,6 +5,9 @@ import repowatcher.utils as utils
 import sys
 import os
 
+if '--debug' in sys.argv:
+    utils.printlog.debug_mode = True
+
 repo_watcher_environ_var = 'GIT_REPO_WATCHER_DIR'
 if repo_watcher_environ_var in os.environ:
     db_directory = os.environ[repo_watcher_environ_var] + '/../db/'
@@ -41,7 +44,6 @@ def parse_arguments():
 def parse_commands(args):
     if args is None:
         return
-
     # print('DEBUG: Parsing args: ' + str(args))
     for a in args:
         if a in commands_parse:

@@ -1,4 +1,5 @@
 import repowatcher.utils as utils
+from repowatcher.utils.printlog import printlog
 
 
 class CategoryDAO:
@@ -31,7 +32,7 @@ class CategoryDAO:
         self.default_category = self.get(CategoryDAO.DEFAULT_CATEGORY)
         if self.default_category is None:
             self.default_category = self.save(CategoryDAO.DEFAULT_CATEGORY)
-            print('Default Category with id: ' + str(self.default_category.id))
+            printlog('Default Category with id: ' + str(self.default_category.id), debug=True)
 
     def get(self, value):
 
@@ -89,7 +90,7 @@ class CategoryDAO:
         return category_list
 
     def save(self, name):
-        print('debug: categorydao - save - ' + name)
+        printlog('categorydao - save - ' + name, debug=True)
         sql_query_save = "INSERT INTO Categories (category_name)" + \
                         " VALUES (:category_name)"
         save_data = (name, )
