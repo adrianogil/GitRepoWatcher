@@ -1,4 +1,12 @@
 
+def get_cmd_flags():
+    return ["-l", "--list"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -l : list all registered repos\n"
+
+
 def execute(args, extra_args, controller):
     if len(args) == 0 and len(extra_args) == 1:
         new_extra_args = dict(extra_args)

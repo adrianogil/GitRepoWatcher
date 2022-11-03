@@ -1,1 +1,2 @@
 pytest==6.1.2
+-e git+https://github.com/adrianogil/pyutils@e38c32768deb4585b594b3d1f16d7080961a5d7c#egg=pyutils

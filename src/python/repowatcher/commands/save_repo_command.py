@@ -1,15 +1,12 @@
+from repowatcher.gitcommands import get_git_root
 import os
 
-from subprocess import *
+def get_cmd_flags():
+    return ["-s", "--save"]
 
 
-def get_git_root(p):
-    """Return None if p is not in a git repo, or the root of the repo if it is"""
-    if call(["git", "branch"], stderr=STDOUT, stdout=open(os.devnull, 'w'), cwd=p) != 0:
-        return None
-    else:
-        root = check_output(["git", "rev-parse", "--show-toplevel"], cwd=p)
-        return root
+def get_help_usage_str():
+    return "\trepo-watcher -s : register current repo\n"
 
 
 def get_categories_from(extra_args, controller):

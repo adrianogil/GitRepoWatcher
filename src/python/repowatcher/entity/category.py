@@ -1,4 +1,4 @@
-from pyutils.code.classproperties import declare_props
+from pyutils.code.props.classproperties import declare_props
 
 
 class Category:

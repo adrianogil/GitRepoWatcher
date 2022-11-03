@@ -5,8 +5,11 @@ import repowatcher.utils as utils
 import sys
 import os
 
-
-db_directory = os.environ['GIT_REPO_WATCHER_DIR'] + '/../db/'
+repo_watcher_environ_var = 'GIT_REPO_WATCHER_DIR'
+if repo_watcher_environ_var in os.environ:
+    db_directory = os.environ[repo_watcher_environ_var] + '/../db/'
+else:
+    db_directory = "../../db/"
 
 controller = GitRepoController(db_directory)
 

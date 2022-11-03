@@ -21,6 +21,7 @@ import repowatcher.commands.get_info_command as get_info_command
 import repowatcher.commands.execute_command as execute_command
 import repowatcher.commands.import_command as import_command
 import repowatcher.commands.export_command as export_command
+import repowatcher.commands.help_command as help_command
 import repowatcher.commands.edit_command as edit_command
 
 import subprocess
@@ -36,6 +37,8 @@ class OperationObject:
 
 class GitRepoController:
     def __init__(self, db_directory):
+
+        self.available_commands = []
 
         if not os.path.exists(db_directory):
             os.makedirs(db_directory)
@@ -55,8 +58,16 @@ class GitRepoController:
 
     def handle_no_args(self):
         print("Default mode: Update and Move HEAD to upstream\n")
-        commands.update_batch_command.execute([], [], self)
-        commands.move_head_command.execute([], [], self)
+        # update_batch_command.execute([], [], self)
+        # move_head_command.execute([], [], self)
+        list_repos_command.execute([], [], self)
+
+    def define_commands(self):
+        self.available_commands = [
+            list_repos_command,
+            save_repo_command,
+            help_command
+        ]
 
     def get_commands(self):
         commands_parse = {
@@ -85,6 +96,14 @@ class GitRepoController:
             '--export'     : export_command.execute,
             'no-args'      : self.handle_no_args,
         }
+        commands_parse = {}
+        self.define_commands()
+
+        for cmd in self.available_commands:
+            cmd_flags = cmd.get_cmd_flags()
+            for flag in cmd_flags:
+                commands_parse[flag] = cmd.execute
+
         return commands_parse
 
     def get_git_root(self, path):
