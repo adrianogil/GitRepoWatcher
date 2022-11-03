@@ -1,3 +1,5 @@
+from repowatcher.utils.printlog import printlog
+
 
 class RepoDAO:
     def __init__(self, conn, cursor, entity_factory, categoryDAO):
@@ -24,7 +26,7 @@ class RepoDAO:
                             "(repo_name, repo_path, update_command, operation_time)" + \
                             " VALUES (:repo_name, :repo_path, :update_command, :operation_time)"
         save_data = repo.get_data_tuple(True)
-        print("DEBUG: repodao - save - " + str(save_data))
+        printlog("repodao - save - " + str(save_data), debug=True)
         self.cursor.execute(sql_query_save, save_data)
         self.conn.commit()
 
@@ -157,7 +159,7 @@ class RepoDAO:
                             " operation_time = ? " + \
                             " WHERE id_repo = ? "
         update_data = repo.get_data_tuple(True) + (repo.id,)
-        print("DEBUG: repodao - save - " + str(update_data))
+        printlog("repodao - save - " + str(update_data), debug=True)
         self.cursor.execute(sql_query_update, update_data)
         self.conn.commit()
 

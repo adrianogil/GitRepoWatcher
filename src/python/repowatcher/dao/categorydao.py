@@ -47,7 +47,6 @@ class CategoryDAO:
 
             category_data = (category_name,)
 
-        # print('DEBUG: categoryDAO - trying to get category from name: ' + name)
         sql_query_get = "SELECT * from Categories WHERE " + category_condition
 
         self.cursor.execute(sql_query_get, category_data)
@@ -105,13 +104,12 @@ class CategoryDAO:
         self.remove_all_categories_from(repo)
         if repo is None or repo.categories is None:
             return
-        print(repo.categories)
+        printlog(repo.categories, debug=True)
         for c in repo.categories:
             self.save_repo_category(repo, c)
 
     def save_repo_category(self, repo, category):
-        print('DEBUG - save_repo_category - repo - ' + str(repo.id) + ' - category - ' + \
-            str(category.id))
+        printlog('save_repo_category - repo - ' + str(repo.id) + ' - category - ' + str(category.id), debug=True)
         sql_query_save = "INSERT INTO RepoCategories (id_repo, id_category)" + \
                         " VALUES (:id_repo, :id_category)"
         save_data = (repo.id, category.id)

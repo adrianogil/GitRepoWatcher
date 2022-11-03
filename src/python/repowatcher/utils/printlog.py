@@ -3,8 +3,8 @@ debug_mode = False
 
 
 def printlog(msg, debug=False):
-    if debug:
-        msg = "debug: " + msg
+    if debug and debug_mode:
+        print("debug: ", msg)
 
-    if not debug or debug_mode:
+    if not debug:
         print(msg)

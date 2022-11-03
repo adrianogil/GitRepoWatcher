@@ -19,7 +19,7 @@ def get_git_root(p):
         return None
     else:
         root = check_output(["git", "rev-parse", "--show-toplevel"], cwd=p)
-        root = root.strip()
+        root = root.decode("utf-8") .strip()
         return root
 
 

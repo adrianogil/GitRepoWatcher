@@ -1,6 +1,9 @@
 from repowatcher.gitcommands import get_git_root
 import os
 
+from repowatcher.utils.printlog import printlog
+
+
 def get_cmd_flags():
     return ["-s", "--save"]
 
@@ -27,7 +30,7 @@ def get_categories_from(extra_args, controller):
 
 
 def execute(args, extra_args, controller):
-    print("save_repo_command.py - " + str(args) + " " + str(extra_args))
+    printlog("save_repo_command.py - " + str(args) + " " + str(extra_args), debug=True)
 
     if len(args) == 0:
         update_command = 'git remote update'
@@ -48,18 +51,23 @@ def execute(args, extra_args, controller):
         print('Current path is not a git project')
         return
 
-    repo_path = git_repo_path[:-1]
+    repo_path = git_repo_path.strip()
     repo_name = os.path.basename(repo_path)
+    repo_categories = get_categories_from(extra_args, controller)
+
+    repo_category_names = []
+    for category in repo_categories:
+        repo_category_names.append(category.name)
 
     print('Saving repo %s' % (repo_name,))
     print('Identified path %s' % (repo_path,))
-    print('Repo Category: %s' % (get_categories_from(extra_args, controller),))
+    print('Repo Categories: %s' % (repo_category_names,))
     print('Using update-command as "%s"' % (update_command,))
 
     repo_args = {
         "name"           : repo_name,
         "path"           : repo_path,
-        "categories"     : get_categories_from(extra_args, controller),
+        "categories"     : repo_categories,
         "update_command" : update_command,
     }
 
