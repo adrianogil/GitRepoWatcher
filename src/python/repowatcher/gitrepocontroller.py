@@ -64,6 +64,7 @@ class GitRepoController:
 
     def define_commands(self):
         self.available_commands = [
+            update_batch_command,
             list_repos_command,
             save_repo_command,
             help_command
@@ -119,6 +120,7 @@ class GitRepoController:
 
         try:
             update_output = subprocess.check_output(update_command, shell=True, stdin=subprocess.PIPE, preexec_fn=preexec_function)
+            update_output = update_output.decode("utf-8").strip()
             print(update_output)
 
             diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)

@@ -2,6 +2,14 @@ import platform
 import subprocess
 
 
+def get_cmd_flags():
+    return ["-u", "--update"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -u : update repo (using registered update command)\n"
+
+
 def execute(args, extra_args, controller):
     search_conditions = controller.get_search_conditions(args, extra_args)
     repo_list = controller.get_repos(search_conditions)
