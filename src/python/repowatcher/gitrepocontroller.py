@@ -68,37 +68,29 @@ class GitRepoController:
             update_batch_command,
             list_repos_command,
             save_repo_command,
-            help_command
+            edit_command,
+            help_command,
         ]
 
     def get_commands(self):
         commands_parse = {
             '-c'           : verify_change_command.execute,
-            '-l'           : list_repos_command.execute,
-            '-s'           : save_repo_command.execute,
             '-i'           : get_info_command.execute,
-            '-u'           : update_batch_command.execute,
             '-d'           : delete_repo_command.execute,
-            '-e'           : edit_command.execute,
             '-x'           : fix_broken_path_command.execute,
             '-up'          : move_head_command.execute,
             '-pc'          : push_commits_command.execute,
             '-lc'          : list_categories_command.execute,
             '-ld'         : last_commits_command.execute,
             '--stats'      : commit_stats_command.execute,
-            '--today'      : today_commits_command.execute,
-            '--list'       : list_repos_command.execute,
             '--list-categories': list_categories_command.execute,
             '--last-commit-date': last_commits_command.execute,
-            '--save'       : save_repo_command.execute,
-            '--update'     : update_batch_command.execute,
             '--fix'           : fix_broken_path_command.execute,
             '--exec'       : execute_command.execute,
             '--import'     : import_command.execute,
             '--export'     : export_command.execute,
             'no-args'      : self.handle_no_args,
         }
-        commands_parse = {}
         self.define_commands()
 
         for cmd in self.available_commands:

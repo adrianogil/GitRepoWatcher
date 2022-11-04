@@ -1,4 +1,13 @@
-import os
+
+def get_cmd_flags():
+    return ["-e", "--edit"]
+
+
+def get_help_usage_str():
+    help_usage_str = "\trepo-watcher -e <repo-id> -nc <new-category-to-add> -rc <category-to-remove>: edit a repo\n"
+    help_usage_str += "\trepo-watcher -e -c <category> -nc <new-category-to-add> -rc <category-to-remove>: edit all repos that contains a category\n"
+    return help_usage_str
+
 
 def execute(args, extra_args, controller):
 
@@ -21,8 +30,8 @@ def execute(args, extra_args, controller):
 
     index = 0
     for repo in repo_list:
-        print('Editing repo info ' + str(index) + ': ' + str(repo.name) + " (ID: " + str(repo.id) + ")")
-        print('- categories: ')
+        print('Editing repo ' + str(index) + ': ' + str(repo.name) + " (ID: " + str(repo.id) + ")")
+        print('- categories changed: ')
         new_cats = []
         for n in new_categories_to_add:
             for c in repo.categories:
@@ -40,13 +49,11 @@ def execute(args, extra_args, controller):
             for c in repo.categories:
                 for rc in categories_to_remove:
                     if c.name == rc.name:
+                        print('\t-- Removed ' + c.name)
                         break
                 else:
                     new_cats.append(c)
             repo.categories = new_cats
-
-        # for c in repo.categories:
-        #     print('DEBUG current cat: ' + c.name)
 
         controller.update_edit(repo)
         
