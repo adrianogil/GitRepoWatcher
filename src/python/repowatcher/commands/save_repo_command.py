@@ -9,7 +9,9 @@ def get_cmd_flags():
 
 
 def get_help_usage_str():
-    return "\trepo-watcher -s : register current repo\n"
+     help_str = "\trepo-watcher -s : register current repo\n"
+     help_str += "\trepo-watcher -s -c <category1> <category2>: register current repo with a list of categories\n"
+     return help_str
 
 
 def get_categories_from(extra_args, controller):
