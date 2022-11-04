@@ -2,6 +2,14 @@ import json
 import os
 
 
+def get_cmd_flags():
+    return ["-t", "--today"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -t : show commits made today\n"
+
+
 def execute(args, extra_args, controller):
     search_conditions = controller.get_search_conditions(args, extra_args)
     repo_list = controller.get_repos(search_conditions)

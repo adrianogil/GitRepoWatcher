@@ -64,6 +64,7 @@ class GitRepoController:
 
     def define_commands(self):
         self.available_commands = [
+            today_commits_command,
             update_batch_command,
             list_repos_command,
             save_repo_command,
