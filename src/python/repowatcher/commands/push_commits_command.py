@@ -1,4 +1,12 @@
 
+def get_cmd_flags():
+    return ["-pc", "--push"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -pc : for each target repo push commits to upstream \n"
+
+
 def execute(args, extra_args, controller):
     search_conditions = controller.get_search_conditions(args, extra_args)
     repo_list = controller.get_repos(search_conditions)
@@ -17,7 +25,3 @@ def execute(args, extra_args, controller):
             print("Caught error when handling repo " + str(repo.name))
         index = index + 1
     print("###################################################")
-            
-
-
-            
