@@ -67,6 +67,7 @@ class GitRepoController:
             today_commits_command,
             update_batch_command,
             list_repos_command,
+            move_head_command,
             save_repo_command,
             edit_command,
             help_command,
@@ -74,11 +75,10 @@ class GitRepoController:
 
     def get_commands(self):
         commands_parse = {
-            '-c'           : verify_change_command.execute,
+            '-f'           : verify_change_command.execute,
             '-i'           : get_info_command.execute,
             '-d'           : delete_repo_command.execute,
             '-x'           : fix_broken_path_command.execute,
-            '-up'          : move_head_command.execute,
             '-pc'          : push_commits_command.execute,
             '-lc'          : list_categories_command.execute,
             '-ld'         : last_commits_command.execute,

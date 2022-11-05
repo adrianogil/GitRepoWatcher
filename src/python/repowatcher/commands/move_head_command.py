@@ -1,4 +1,12 @@
-import os
+
+
+def get_cmd_flags():
+    return ["-up", "--update"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -up : for each target repo fetch new commits and move head (in case there is no changes) \n"
+
 
 def execute(args, extra_args, controller):
     if len(args) == 0:
@@ -9,10 +17,8 @@ def execute(args, extra_args, controller):
     search_conditions = controller.get_search_conditions(args, extra_args)
     repo_list = controller.get_repos(search_conditions)
 
-    current_repo = ''
     index = 0;
     new_commits = {}
-
 
     for repo in repo_list:
         # try:
