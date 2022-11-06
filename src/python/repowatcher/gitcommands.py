@@ -4,6 +4,8 @@ import os
 import subprocess
 from subprocess import *
 
+from repowatcher.utils.printlog import printlog
+
 
 def get_unstaged_files(repo_path):
     get_unstaged_files = 'git diff --numstat | wc -l'
@@ -47,9 +49,13 @@ def push_commits_to_upstream(path):
 def get_diverge_commits_HEAD_to_upstream(path):
     upstream = get_upstream_name(path)
 
-    get_diverge_commits = 'git log HEAD..' + upstream + ' --pretty=oneline | wc -l'
+    printlog(f"Found the upstream name: {upstream}", debug=True)
+
+    get_diverge_commits = f"git log {upstream}..HEAD --pretty=oneline | wc -l"
     get_diverge_commits_command = 'cd "' + path + '" && ' + get_diverge_commits
     diverge_commits = run_cmd(get_diverge_commits_command)
+
+    printlog(f"Diverged commits: {diverge_commits}", debug=True)
 
     return diverge_commits
 
