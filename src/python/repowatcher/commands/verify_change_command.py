@@ -1,4 +1,13 @@
-import subprocess
+from repowatcher.utils.printlog import printlog
+
+
+def get_cmd_flags():
+    return ["-vc", "--verify-change"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -vc : verify which repo has unstaged or uncommited changes \n"
+
 
 def execute(args, extra_args, controller):
     # if len(args) == 0:
@@ -19,26 +28,26 @@ def execute(args, extra_args, controller):
 
             # try:
             index = index + 1
-            print("###################################################")
+            printlog("###################################################")
             current_repo = repo.name
 
             if unstaged != '0':
-                print('There are unstaged changes in repo!')
+                printlog('There are unstaged changes in repo!')
                 unstaged_repos.append({'id' : repo.id, 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
             else:
                 if total_commits != '0':
-                    print('There are commits to be sent to upstream!')
+                    printlog('There are commits to be sent to upstream!')
                     unstaged_repos.append({'id' : repo.id, 'repo' : current_repo, 'unstaged' : unstaged, 'commits': total_commits})
         except:
-            print("Caught error when handling repo " + str(current_repo))
-    print("###################################################")
+            printlog("Caught error when handling repo " + str(current_repo))
+    printlog("###################################################")
 
     total_unstaged = len(unstaged_repos)
     if total_unstaged == 1:
-        print("Found changes in only 1 repo:")
+        printlog("Found changes in only 1 repo:")
     else:
-        print("Found changes in %s repos:" % (total_unstaged,))
+        printlog("Found changes in %s repos:" % (total_unstaged,))
     for u in unstaged_repos:
-        print("  - (ID: %s) %s - (%s unstaged) (%s commits)" % \
+        printlog("  - (ID: %s) %s - (%s unstaged) (%s commits)" % \
             (u['id'], u['repo'], u['unstaged'], u['commits']))
-    print("###################################################")
+    printlog("###################################################")

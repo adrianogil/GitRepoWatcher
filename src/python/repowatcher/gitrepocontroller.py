@@ -64,19 +64,19 @@ class GitRepoController:
 
     def define_commands(self):
         self.available_commands = [
+            save_repo_command,
+            verify_change_command,
             today_commits_command,
             update_batch_command,
             delete_repo_command,
             list_repos_command,
             move_head_command,
-            save_repo_command,
             edit_command,
             help_command,
         ]
 
     def get_commands(self):
         commands_parse = {
-            '-f'           : verify_change_command.execute,
             '-i'           : get_info_command.execute,
             '-x'           : fix_broken_path_command.execute,
             '-pc'          : push_commits_command.execute,
