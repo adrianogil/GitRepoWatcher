@@ -1,10 +1,14 @@
+from repowatcher.utils.printlog import printlog
+
 
 def get_cmd_flags():
-    return ["-pc", "--push"]
+    return ["-p", "--push"]
 
 
 def get_help_usage_str():
-    return "\trepo-watcher -pc : for each target repo push commits to upstream \n"
+    help_usage_str = "\trepo-watcher -p : for each target repo push commits to upstream \n"
+    help_usage_str += "\trepo-watcher --push : for each target repo push commits to upstream \n"
+    return help_usage_str
 
 
 def execute(args, extra_args, controller):
@@ -17,11 +21,11 @@ def execute(args, extra_args, controller):
             results = controller.push_commits_to_upstream(repo)
 
             if results['ok?']:
-                print("###################################################")
-                print('Repo ' + str(index) + ' - ' + repo.name + ': Sending ' + \
+                printlog("###################################################")
+                printlog('Repo ' + str(index) + ' - ' + repo.name + ': Sending ' +
                     str(results['commits']) + ' commits\n')
-                print(results['output'] + "\n")
+                printlog(results['output'] + "\n")
         except:
-            print("Caught error when handling repo " + str(repo.name))
+            printlog("Caught error when handling repo " + str(repo.name))
         index = index + 1
-    print("###################################################")
+    printlog("###################################################")

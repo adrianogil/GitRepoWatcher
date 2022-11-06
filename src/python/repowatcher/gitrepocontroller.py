@@ -66,6 +66,7 @@ class GitRepoController:
         self.available_commands = [
             save_repo_command,
             verify_change_command,
+            push_commits_command,
             today_commits_command,
             update_batch_command,
             delete_repo_command,
@@ -79,7 +80,6 @@ class GitRepoController:
         commands_parse = {
             '-i'           : get_info_command.execute,
             '-x'           : fix_broken_path_command.execute,
-            '-pc'          : push_commits_command.execute,
             '-lc'          : list_categories_command.execute,
             '-ld'         : last_commits_command.execute,
             '--stats'      : commit_stats_command.execute,
