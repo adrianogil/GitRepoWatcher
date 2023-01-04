@@ -55,11 +55,17 @@ def execute(args, extra_args, controller):
             json.dump(report_data, f)
     else:
         total_commits_in_all_repos = 0
-        for r in report_data:
+        if '--obsidian' in extra_args:
+            for r in report_data:
+                print('- %s ' % (report_data[r]['repo-name'],))
+                for c in report_data[r]['commits']:
+                    print("\t- " + c['commit-msg'])
+        else:
+            for r in report_data:
+                print("###################################################")
+                print('Repo %s (Id %s) ' % (report_data[r]['repo-name'], report_data[r]['repo-id']))
+                total_commits_in_all_repos = total_commits_in_all_repos + len(report_data[r]['commits'])
+                for c in report_data[r]['commits']:
+                    print(c['commit-id'] + " " + c['commit-msg'])
             print("###################################################")
-            print('Repo %s (Id %s) ' % (report_data[r]['repo-name'], report_data[r]['repo-id']))
-            total_commits_in_all_repos = total_commits_in_all_repos + len(report_data[r]['commits'])
-            for c in report_data[r]['commits']:
-                print(c['commit-id'] + " " + c['commit-msg'])
-        print("###################################################")
-        print('Today, there were generated %s commits in %s repos.' % (total_commits_in_all_repos, total_repos_with_new_commits))
+            print('Today, there were generated %s commits in %s repos.' % (total_commits_in_all_repos, total_repos_with_new_commits))
