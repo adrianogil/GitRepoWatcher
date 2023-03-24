@@ -191,6 +191,11 @@ class GitRepoController:
             for c in extra_args['-cs']:
                 add_category(c)
 
+        if "--path" in extra_args:
+            search_conditions['path'] = extra_args["--path"]
+        if "-p" in extra_args:
+            search_conditions['path'] = extra_args["-p"]
+
         # if not 'path' in search_conditions:
         #     search_conditions['path'] = gitcommands.get_git_root(os.getcwd())
 
