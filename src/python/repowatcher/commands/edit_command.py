@@ -1,4 +1,4 @@
-from repowatcher.gitcommands import 
+from repowatcher.gitcommands import get_git_root
 
 import copy
 import os
