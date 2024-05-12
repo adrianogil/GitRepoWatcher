@@ -24,6 +24,8 @@ import repowatcher.commands.export_command as export_command
 import repowatcher.commands.help_command as help_command
 import repowatcher.commands.edit_command as edit_command
 
+from pyutils.cli.cliapp import CliController
+
 import subprocess
 import sqlite3
 import os
@@ -35,7 +37,7 @@ class OperationObject:
         self.success = operation_success
         self.data = data
 
-class GitRepoController:
+class GitRepoController(CliController):
     def __init__(self, db_directory):
 
         self.available_commands = []
