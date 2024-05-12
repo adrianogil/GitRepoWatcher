@@ -84,6 +84,7 @@ class RepoDAO:
             # print('DEBUG: repodao - get_all - ' + query_conditions)
             if len(query_conditions) > 0:
                 sql_query_get_all = sql_query_get_all + " WHERE " + query_conditions
+            sql_query_get_all = sql_query_get_all + " ORDER BY id_repo"
             self.cursor.execute(sql_query_get_all, conditions_data)
 
         rows = self.cursor.fetchall()

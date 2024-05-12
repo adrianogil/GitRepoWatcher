@@ -19,8 +19,7 @@ def execute(args, extra_args, controller):
 
     index = 0
     for repo in repo_list:
-        print('Repo ' + str(index) + ': ' + str(repo.name) + " (ID: " + str(repo.id) + ")")
-        print('- path: ' + str(repo.path))
+        print(f'{repo.id}: {repo.name}: {repo.path}')
         print('- categories: ')
         for c in repo.categories:
             print('\t- ' + c.name)
