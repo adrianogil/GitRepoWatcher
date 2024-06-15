@@ -1,5 +1,12 @@
 import os
 
+def get_cmd_flags():
+    return ["-x", "--fix"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -x : fix broken path\n"
+
 
 def execute(args, extra_args, controller):
     if len(args) == 0 and len(extra_args) == 1:

@@ -1,6 +1,13 @@
+import csv
 import os
 
-import csv
+def get_cmd_flags():
+    return ["--import"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher --import: import csv file"
+
 
 def execute(args, extra_args, controller):
     print("DEBUG import_command.py - " + str(args) + " " + str(extra_args))

@@ -1,5 +1,12 @@
 import os
 
+def get_cmd_flags():
+    return ["-i", "--info"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -i : get info about the repo in the current path\n"
+
 def execute(args, extra_args, controller):
 
     search_conditions = controller.get_search_conditions(args, extra_args)

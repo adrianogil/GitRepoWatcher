@@ -1,6 +1,15 @@
 import os
 import csv
 
+
+def get_cmd_flags():
+    return ["--export"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher --export: export"
+
+
 def execute(args, extra_args, controller):
     print("DEBUG export_command.py - " + str(args) + " " + str(extra_args))
 

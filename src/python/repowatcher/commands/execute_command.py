@@ -1,5 +1,13 @@
 import subprocess
 
+def get_cmd_flags():
+    return ["--exec"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher --exec <command> [<search args>]: execute a command in all repos"
+
+
 def execute(args, extra_args, controller):
 
     # if len(args) == 2:

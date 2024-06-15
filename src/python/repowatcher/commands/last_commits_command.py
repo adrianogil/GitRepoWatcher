@@ -1,4 +1,11 @@
 
+def get_cmd_flags():
+    return ["-ld", "--last-commits"]
+
+
+def get_help_usage_str():
+    return "\trepo-watcher -ld: list last commits"
+
 def execute(args, extra_args, controller):
 
     search_conditions = controller.get_search_conditions(args, extra_args)

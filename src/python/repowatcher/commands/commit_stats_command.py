@@ -1,6 +1,13 @@
 
-def execute(args, extra_args, controller):
+def get_cmd_flags():
+    return ["--stats"]
 
+
+def get_help_usage_str():
+    return "\trepo-watcher --stats: show stats"
+
+
+def execute(args, extra_args, controller):
     search_conditions = controller.get_search_conditions(args, extra_args)
     repo_list = controller.get_repos(search_conditions)
 
