@@ -6,6 +6,7 @@ import repowatcher.commands.last_commits_command as last_commits_command
 import repowatcher.commands.push_commits_command as push_commits_command
 import repowatcher.commands.update_batch_command as update_batch_command
 import repowatcher.commands.commit_stats_command as commit_stats_command
+import repowatcher.commands.developer_stats_command as developer_stats_command
 import repowatcher.commands.delete_repo_command as delete_repo_command
 import repowatcher.commands.list_repos_command as list_repos_command
 import repowatcher.commands.save_repo_command as save_repo_command
@@ -24,6 +25,7 @@ def get_available_commands():
         fix_broken_path_command,
         last_commits_command,
         commit_stats_command,
+        developer_stats_command,
         save_repo_command,
         verify_change_command,
         push_commits_command,

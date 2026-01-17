@@ -67,6 +67,11 @@ Get commit stats
 repo-watcher --stats
 ```
 
+Get developer stats across all registered repos
+```
+repo-watcher --developer-stats <developer email>
+```
+
 Get commits from today
 ```
 repo-watcher --today

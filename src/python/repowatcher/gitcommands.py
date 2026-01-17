@@ -1,6 +1,7 @@
 from pyutils.cli.clitools import run_cmd
 
 import os
+import shlex
 import subprocess
 from subprocess import *
 
@@ -95,6 +96,18 @@ def get_today_commits(path):
             today_commits.append(today_commits_list[i])
 
     return today_commits
+
+
+def get_commits_by_author(path, author_email):
+    author = shlex.quote(author_email)
+    get_author_commits = f"git log --author={author} --pretty=oneline | wc -l"
+    get_author_commits_command = 'cd "' + path + '" && ' + get_author_commits
+    author_commits = run_cmd(get_author_commits_command).strip()
+
+    if author_commits == "":
+        return 0
+
+    return int(author_commits)
 
 
 def get_last_commit(path):
