@@ -4,7 +4,7 @@ def get_cmd_flags():
 
 
 def get_help_usage_str():
-    return "\trepo-watcher -ld: list last commits"
+    return "\trepo-watcher -ld: list last commits\n"
 
 def execute(args, extra_args, controller):
 
