@@ -202,6 +202,10 @@ class GitRepoController(CliController):
 
         return gitcommands.get_today_commits(repo.path)
 
+    def get_commits_by_author(self, repo, author_email):
+
+        return gitcommands.get_commits_by_author(repo.path, author_email)
+
     def get_last_commit(self, repo):
 
         return gitcommands.get_last_commit(repo.path)
