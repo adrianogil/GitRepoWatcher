@@ -66,6 +66,11 @@ def execute(args, extra_args, controller):
     print('Repo Categories: %s' % (repo_category_names,))
     print('Using update-command as "%s"' % (update_command,))
 
+    existing_repos = controller.get_repos({"path": repo_path})
+    if len(existing_repos) > 0:
+        print('Error: repo already saved with ID ' + str(existing_repos[0].id))
+        return
+
     repo_args = {
         "name"           : repo_name,
         "path"           : repo_path,
