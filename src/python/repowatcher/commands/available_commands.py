@@ -10,6 +10,7 @@ import repowatcher.commands.developer_stats_command as developer_stats_command
 import repowatcher.commands.delete_repo_command as delete_repo_command
 import repowatcher.commands.list_repos_command as list_repos_command
 import repowatcher.commands.save_repo_command as save_repo_command
+import repowatcher.commands.save_subdir_repos_command as save_subdir_repos_command
 import repowatcher.commands.move_head_command as move_head_command
 import repowatcher.commands.get_info_command as get_info_command
 import repowatcher.commands.execute_command as execute_command
@@ -27,6 +28,7 @@ def get_available_commands():
         commit_stats_command,
         developer_stats_command,
         save_repo_command,
+        save_subdir_repos_command,
         verify_change_command,
         push_commits_command,
         today_commits_command,
