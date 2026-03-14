@@ -25,8 +25,9 @@ def execute(args, extra_args, controller):
         index = index + 1
         print("###################################################")
         current_repo = repo.name
-        print('Repo ' + str(index) + ': Move HEAD to upstream in ' + current_repo)
-        
+        print('Repo ' + str(repo.id) + ': Move HEAD to upstream in ' + current_repo)
+
+        controller.update_gitrepo(repo)
         diverge_commits = controller.get_diverge_commits_to_upstream(repo)
         unstaged = controller.get_unstaged_files(repo)
 
