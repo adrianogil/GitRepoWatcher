@@ -1,11 +1,10 @@
-from pyutils.cli.clitools import run_cmd
+from repowatcher.utils.clitools import run_cmd
+from repowatcher.utils.printlog import printlog
 
 import os
 import shlex
 import subprocess
 from subprocess import *
-
-from repowatcher.utils.printlog import printlog
 
 
 def get_unstaged_files(repo_path):

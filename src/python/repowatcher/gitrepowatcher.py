@@ -5,7 +5,7 @@ import utils
 
 from .gitrepocontroller import GitRepoController
 
-from pyutils.cli.cliapp import CliApp
+from repowatcher.utils.cliapp import CliApp
 
 
 db_directory = os.environ['GIT_REPO_WATCHER_DIR'] + '/../db/'

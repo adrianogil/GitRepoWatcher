@@ -8,7 +8,7 @@ import repowatcher.utils as utils
 import repowatcher.commands.list_repos_command as list_repos_command
 from repowatcher.commands.available_commands import get_available_commands
 
-from pyutils.cli.cliapp import CliController
+from repowatcher.utils.cliapp import CliController
 
 import subprocess
 import sqlite3

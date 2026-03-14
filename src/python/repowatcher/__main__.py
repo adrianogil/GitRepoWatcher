@@ -2,7 +2,7 @@ from repowatcher.gitrepocontroller import GitRepoController
 
 import repowatcher.utils as utils
 
-from pyutils.cli.cliapp import CliApp
+from repowatcher.utils.cliapp import CliApp
 
 import sys
 import os

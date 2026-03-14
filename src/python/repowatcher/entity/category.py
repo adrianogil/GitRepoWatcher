@@ -1,4 +1,4 @@
-from pyutils.code.props.classproperties import declare_props
+from repowatcher.utils.classproperties import declare_props
 
 
 class Category:
