@@ -3,8 +3,6 @@ from repowatcher.utils.printlog import printlog
 
 import os
 import shlex
-import subprocess
-from subprocess import *
 
 
 def get_unstaged_files(repo_path):
@@ -17,12 +15,16 @@ def get_unstaged_files(repo_path):
 
 def get_git_root(p):
     """Return None if p is not in a git repo, or the root of the repo if it is"""
-    if call(["git", "branch"], stderr=STDOUT, stdout=open(os.devnull, 'w'), cwd=p) != 0:
+    is_repo_command = f'cd "{p}" && git branch > /dev/null 2>&1'
+    is_repo = run_cmd(is_repo_command)
+
+    if is_repo is None:
         return None
-    else:
-        root = check_output(["git", "rev-parse", "--show-toplevel"], cwd=p)
-        root = root.decode("utf-8") .strip()
-        return root
+
+    get_root_command = f'cd "{p}" && git rev-parse --show-toplevel'
+    root = run_cmd(get_root_command)
+
+    return root
 
 
 def get_upstream_name(path):
@@ -73,8 +75,10 @@ def get_total_commits(path):
 
     get_total_commits = 'git log HEAD --pretty=oneline | wc -l'
     get_total_commits_command = 'cd "' + path + '" && ' + get_total_commits
-    total_commits = subprocess.check_output(get_total_commits_command, shell=True)
-    total_commits = total_commits.strip()
+    total_commits = run_cmd(get_total_commits_command)
+
+    if total_commits is None or total_commits == "":
+        return 0
 
     total_commits = int(total_commits)
 
@@ -113,8 +117,10 @@ def get_last_commit(path):
 
     get_last_commit = "git log --pretty=format:'%h %ad | %s%d [%an]' --date=short | head -1"
     get_last_commit_command = 'cd "' + path + '" && ' + get_last_commit
-    last_commit_output = subprocess.check_output(get_last_commit_command, shell=True)
-    last_commit_output = last_commit_output.strip()
+    last_commit_output = run_cmd(get_last_commit_command)
+
+    if last_commit_output is None:
+        return ""
 
     return last_commit_output
 
@@ -122,7 +128,9 @@ def get_last_commit_date(path):
 
     get_last_commit = "git log --pretty=format:'%ad' --date=short | head -1"
     get_last_commit_command = 'cd "' + path + '" && ' + get_last_commit
-    last_commit_output = subprocess.check_output(get_last_commit_command, shell=True)
-    last_commit_output = last_commit_output.strip()
+    last_commit_output = run_cmd(get_last_commit_command)
+
+    if last_commit_output is None:
+        return ""
 
     return last_commit_output
