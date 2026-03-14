@@ -58,6 +58,15 @@ If no command is provided, the tool runs the default mode and lists registered r
   repo-watcher -s "git remote update" default
   ```
 
+- `-ss`  
+  Register all Git repositories found under subdirectories of the current path.  
+  You can pass category names and they will be assigned to every saved repo.  
+  Examples:
+  ```bash
+  repo-watcher -ss
+  repo-watcher -ss work personal
+  ```
+
 - `-l`, `--list`  
   List registered repos. You can pass filters (category, id, path).
 
