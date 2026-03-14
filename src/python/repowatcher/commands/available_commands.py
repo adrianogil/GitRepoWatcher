@@ -18,6 +18,7 @@ import repowatcher.commands.import_command as import_command
 import repowatcher.commands.export_command as export_command
 import repowatcher.commands.help_command as help_command
 import repowatcher.commands.edit_command as edit_command
+import repowatcher.commands.sync_command as sync_command
 
 
 def get_available_commands():
@@ -41,5 +42,6 @@ def get_available_commands():
         list_repos_command,
         move_head_command,
         edit_command,
+        sync_command,
         help_command,
     ]

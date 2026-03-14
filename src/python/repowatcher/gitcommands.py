@@ -48,6 +48,46 @@ def push_commits_to_upstream(path):
     return push_commits_output
 
 
+def _run_git_command(path, git_args):
+    import subprocess
+
+    process = subprocess.run(
+        ["git"] + git_args,
+        cwd=path,
+        capture_output=True,
+        text=True,
+    )
+
+    stdout = (process.stdout or "").strip()
+    stderr = (process.stderr or "").strip()
+    output = "\n".join([part for part in [stdout, stderr] if part]).strip()
+
+    return {
+        "ok?": process.returncode == 0,
+        "output": output,
+        "returncode": process.returncode,
+    }
+
+
+def remote_update(path):
+    result = _run_git_command(path, ["remote", "update"])
+    return result["output"]
+
+
+def rebase(path):
+    return _run_git_command(path, ["rebase"])
+
+
+def abort_rebase(path):
+    result = _run_git_command(path, ["rebase", "--abort"])
+    return result["output"]
+
+
+def push(path):
+    result = _run_git_command(path, ["push"])
+    return result["output"]
+
+
 def get_diverge_commits_HEAD_to_upstream(path):
     upstream = get_upstream_name(path)
 
