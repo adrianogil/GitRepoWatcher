@@ -1,107 +1,135 @@
 # GitRepoWatcher
-Python scripts to manage multiple git repos
 
-# Command line options
+CLI utility to register and manage multiple local Git repositories from one place.
 
-Save a repo with category 'default' and update command as 'git remote update'
+## Python compatibility
 
-```
-repo-watcher -s
-```
+This project supports **Python 3.9.6+**.
 
-Save a repo with category 'default'
+## Dependencies
 
-```
-repo-watcher -s <category>
-```
+Install dependencies from `src/python/requirements.txt`:
 
-Save a repo with a specific update command and a category
-```
-repo-watcher -s <category> <update-command>
+```bash
+pip install -r src/python/requirements.txt
 ```
 
-Update all saved repos. Each registered repo will be updated using their corresponding update command.
-```
-repo-watcher --update [<category>]
-```
+Current dependencies:
 
-```
-repo-watcher -u [<category>]
-```
-
-
-Move HEAD to upstream in all saved repos.
-```
-repo-watcher -up [<category>]
-```
-
-Delete a saved repo.
-```
-repo-watcher -d <id>
-```
-
-Delete current folder from saved repos.
-```
-repo-watcher -d
-```
-
-Delete all stored data
-```
-repo-watcher --delete-all
-```
-
-
-Verify changes in repos
-```
-repo-watcher -c
-```
-
-
-Get info about current path
-```
-repo-watcher -i
-```
-
-Get commit stats
-```
-repo-watcher --stats
-```
-
-Get developer stats across all registered repos
-```
-repo-watcher --developer-stats <developer email>
-```
-
-Get commits from today
-```
-repo-watcher --today
-```
-
-## Planned features
-- Refactoring code using DAO
-- More than one category for repo
-- Add a excluding category
-- Add few features similar to [https://github.com/kamranahmedse/git-standup](git-standup)
+- `psutil`
+- `prompt_toolkit`
+- `pytest` (for tests)
 
 ## Installation
 
-In case you have gil-install command, you just need to type:
+If you have `gil-install` available:
 
-```
-cd <Gitrepowatcher-path>
+```bash
+cd <GitRepoWatcher-path>
 gil-install -i
 ```
 
-Add the following lines to your bashrc:
-```
+Add the following lines to your shell profile:
+
+```bash
 export GIT_REPO_WATCHER_DIR=<path-to-gitrepowatcher>
 source $GIT_REPO_WATCHER_DIR/src/bashrc.sh
 ```
 
+## Usage
+
+```bash
+repo-watcher <command> [arguments] [filters]
+```
+
+If no command is provided, the tool runs the default mode and lists registered repos.
+
+### Commands
+
+- `-h`, `--help`  
+  Show help text.
+
+- `-s`, `--save`  
+  Register current repository.  
+  Examples:
+  ```bash
+  repo-watcher -s
+  repo-watcher -s -c work personal
+  repo-watcher -s "git remote update" default
+  ```
+
+- `-l`, `--list`  
+  List registered repos. You can pass filters (category, id, path).
+
+- `-lc`, `--list`  
+  List categories.
+
+- `-d`, `--delete`  
+  Delete repos matching filters.
+
+- `-e`, `--edit`  
+  Edit repo categories.  
+  Supports:
+  - `-nc <category...>` to add categories
+  - `-rc <category...>` to remove categories
+
+- `-u`, `--update`  
+  Run each repo's update command.
+
+- `-up`  
+  Move HEAD to upstream when safe (no local unstaged changes / divergence constraints).
+
+- `-p`, `--push`  
+  Push local commits to upstream for matching repos.
+
+- `-vc`, `--verify-change`  
+  Show repos with unstaged changes or local commits to be pushed.
+
+- `-i`, `--info`  
+  Show repo information for current path (or provided filters).
+
+- `-x`, `--fix`  
+  Remove entries that point to broken/missing paths.
+
+- `-ld`, `--last-commits`  
+  Show latest commit for each matching repo.
+
+- `--stats`  
+  Show commit totals per repo.
+
+- `--developer-stats <email>`  
+  Show per-repo commit counts for a developer email.
+
+- `-t`, `--today`  
+  Show today's commits across matching repos.
+  Extra options:
+  - `--obsidian` for markdown bullet output
+  - `--json <file>` to write report as JSON
+
+- `--exec <command>`  
+  Execute a shell command across matching repos.
+
+- `--import <csv_file>`  
+  Import repos from CSV (`Path`, `UpdateCommand`, `Category` columns expected).
+
+- `--export <csv_file>`  
+  Export repos to CSV.
+
+## Filters
+
+Many commands accept filters after the command arguments:
+
+- Repository id (integer)
+- Category name
+- Repo path
+- `-cs <category...>` to add category filters
+- `--path <path>` or `-p <path>` to filter by path
+- `--all` to disable filtering
+
 ## Contributing
 
-Feel free to submit PRs. I will do my best to review and merge them if I consider them essential.
+Feel free to submit PRs.
 
 ## Development status
 
-This is a very alpha software. The code was written with no consideration of coding standards and architecture. A refactoring would do it good...
+Project is functional but still evolving and could benefit from further refactoring.
