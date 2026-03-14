@@ -48,6 +48,31 @@ def push_commits_to_upstream(path):
     return push_commits_output
 
 
+def remote_update(path):
+    remote_update_command = 'cd "' + path + '" && git remote update'
+    return run_cmd(remote_update_command, return_stderr=True)
+
+
+def rebase(path):
+    rebase_command = 'cd "' + path + '" && git rebase'
+    rebase_output = run_cmd(rebase_command, return_stderr=True)
+
+    return {
+        "ok?": rebase_output is not None,
+        "output": rebase_output,
+    }
+
+
+def abort_rebase(path):
+    abort_rebase_command = 'cd "' + path + '" && git rebase --abort'
+    return run_cmd(abort_rebase_command, return_stderr=True)
+
+
+def push(path):
+    push_command = 'cd "' + path + '" && git push'
+    return run_cmd(push_command, return_stderr=True)
+
+
 def get_diverge_commits_HEAD_to_upstream(path):
     upstream = get_upstream_name(path)
 

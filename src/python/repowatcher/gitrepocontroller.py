@@ -194,6 +194,18 @@ class GitRepoController(CliController):
             return {"ok?": True, "commits" : total_commits,  "output" : command_output}
         return {"ok?": False}
 
+    def remote_update(self, repo):
+        return gitcommands.remote_update(repo.path)
+
+    def rebase(self, repo):
+        return gitcommands.rebase(repo.path)
+
+    def abort_rebase(self, repo):
+        return gitcommands.abort_rebase(repo.path)
+
+    def push(self, repo):
+        return gitcommands.push(repo.path)
+
     def get_total_commits(self, repo):
 
         return gitcommands.get_total_commits(repo.path)
