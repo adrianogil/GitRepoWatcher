@@ -55,7 +55,14 @@ def execute(args, extra_args, controller):
         repo_name = os.path.basename(normalized_path)
 
         existing_repos = controller.get_repos({"path": normalized_path})
-        if len(existing_repos) > 0:
+        already_saved = False
+        for existing_repo in existing_repos:
+            existing_repo_path = os.path.abspath(existing_repo.path)
+            if existing_repo_path == normalized_path:
+                already_saved = True
+                break
+
+        if already_saved:
             continue
 
         repo_args = {
