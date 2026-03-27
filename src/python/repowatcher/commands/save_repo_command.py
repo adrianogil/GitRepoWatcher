@@ -53,7 +53,7 @@ def execute(args, extra_args, controller):
         print('Current path is not a git project')
         return
 
-    repo_path = git_repo_path.strip()
+    repo_path = os.path.abspath(git_repo_path.strip())
     repo_name = os.path.basename(repo_path)
     repo_categories = get_categories_from(extra_args, controller)
 
@@ -66,10 +66,15 @@ def execute(args, extra_args, controller):
     print('Repo Categories: %s' % (repo_category_names,))
     print('Using update-command as "%s"' % (update_command,))
 
+    # Prevent duplicate registrations only when the repository path matches.
+    # This allows repositories with the same basename to be saved when they
+    # are in different directories.
     existing_repos = controller.get_repos({"path": repo_path})
-    if len(existing_repos) > 0:
-        print('Error: repo already saved with ID ' + str(existing_repos[0].id))
-        return
+    for existing_repo in existing_repos:
+        existing_repo_path = os.path.abspath(existing_repo.path)
+        if existing_repo_path == repo_path:
+            print('Error: repo already saved with ID ' + str(existing_repo.id))
+            return
 
     repo_args = {
         "name"           : repo_name,
