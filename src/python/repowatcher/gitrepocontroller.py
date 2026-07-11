@@ -70,14 +70,8 @@ class GitRepoController(CliController):
     def update_gitrepo(self, repo):
         diverge_commits = ""
 
-        update_command = 'cd "' + repo.path + '" && ' + repo.update_command
-
-        def preexec_function():
-            os.setpgrp()
-
         try:
-            update_output = subprocess.check_output(update_command, shell=True, stdin=subprocess.PIPE, preexec_fn=preexec_function)
-            update_output = update_output.decode("utf-8").strip()
+            update_output = gitcommands.run_command_string(repo.path, repo.update_command)
             print(update_output)
 
             diverge_commits = gitcommands.get_diverge_commits_HEAD_to_upstream(repo.path)
@@ -180,9 +174,7 @@ class GitRepoController(CliController):
     def move_to_upstream(self, repo):
         upstream = gitcommands.get_upstream_name(repo.path)
 
-        move_upstream = ' git reset --hard ' + upstream.strip()
-        move_upstream_command = 'cd "' + repo.path + '" && ' + move_upstream
-        move_output = subprocess.check_output(move_upstream_command, shell=True)
+        move_output = subprocess.check_output(["git", "reset", "--hard", upstream.strip()], cwd=repo.path)
 
         return move_output
 

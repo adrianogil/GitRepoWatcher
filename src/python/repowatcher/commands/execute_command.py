@@ -1,4 +1,5 @@
 import subprocess
+import shlex
 
 def get_cmd_flags():
     return ["--exec"]
@@ -21,6 +22,12 @@ def execute(args, extra_args, controller):
 
     if len(args) > 0:
         command_batch = args[0]
+    else:
+        return
+
+    command_args = shlex.split(command_batch)
+    if not command_args:
+        return
 
     search_conditions = controller.get_search_conditions(args[1:], extra_args)
     repo_list = controller.get_repos(search_conditions)
@@ -31,9 +38,8 @@ def execute(args, extra_args, controller):
     for repo in repo_list:
         print("###################################################")
         print('Repo %s (Id %s)\n' % (repo.name,repo.id))
-        repo_command = 'cd "' + str(repo.path) + '" && ' + command_batch
-        repo_command_output = subprocess.check_output(repo_command, shell=True)
-        repo_command_output = repo_command_output.strip()
+        repo_command_output = subprocess.check_output(command_args, cwd=str(repo.path))
+        repo_command_output = repo_command_output.decode("utf-8").strip()
 
         print(repo_command_output)
 

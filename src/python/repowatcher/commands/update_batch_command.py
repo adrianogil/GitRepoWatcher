@@ -33,8 +33,10 @@ def notify_new_commits(repo_name, new_commits):
     if is_termux():
         pass
     else:
-        subprocess_cmd = 'terminal-notifier -title "Repo %s" -message "%s new commits!"' % (
-                repo_name,
-                new_commits
-            )
-        subprocess.check_output(subprocess_cmd, shell=True)
+        subprocess.check_output([
+            'terminal-notifier',
+            '-title',
+            'Repo %s' % (repo_name,),
+            '-message',
+            '%s new commits!' % (new_commits,),
+        ])
