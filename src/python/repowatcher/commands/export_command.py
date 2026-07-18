@@ -1,4 +1,3 @@
-import os
 import csv
 
 
@@ -16,20 +15,22 @@ def execute(args, extra_args, controller):
     filename = args[0]
     repo_list = controller.get_repos()
 
-    writer = csv.writer(open(filename, 'w'))
-    fields_names = ['RepoId', \
-                    'Path',\
-                    'UpdateCommand',\
-                    'Category'
+    fields_names = [
+        'RepoId',
+        'Path',
+        'UpdateCommand',
+        'Category',
     ]
-    writer.writerow([unicode(s).encode("utf-8") for s in fields_names])
 
-    index = 0
-    for repo in repo_list:
-        row_data = [repo.id, \
-                    repo.path, \
-                    repo.update_command, \
-                    repo.categories[0].name]
-        writer.writerow([unicode(s).encode("utf-8") for s in row_data])
-        index = index + 1
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(fields_names)
 
+        for repo in repo_list:
+            row_data = [
+                repo.id,
+                repo.path,
+                repo.update_command,
+                repo.categories[0].name if repo.categories else '',
+            ]
+            writer.writerow(row_data)
