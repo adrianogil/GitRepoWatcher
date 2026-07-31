@@ -1,5 +1,19 @@
 from .flags import process_args
 
+
+RESERVED_OPTION_FLAGS = frozenset({
+    "-c",
+    "-cs",
+    "-nc",
+    "-rc",
+    "--all",
+    "--debug",
+    "--json",
+    "--obsidian",
+    "--path",
+})
+
+
 class CliController:
     """
     This class represents a controller for the CLI application.
@@ -61,11 +75,15 @@ class CliApp:
                 print('Command not found')
             return
 
-        command_found = False
-        for a in args:
-            if a in commands_parse:
-                command_found = True
-                if commands_parse[a](args[a], args, self.controller):
-                    break
-        if not command_found:
+        command_flags = [arg for arg in args if arg in commands_parse]
+
+        if not command_flags:
             print('Command not found')
+            return
+
+        if len(command_flags) > 1:
+            print('Only one command can be specified: ' + ', '.join(command_flags))
+            return
+
+        command_flag = command_flags[0]
+        commands_parse[command_flag](args[command_flag], args, self.controller)

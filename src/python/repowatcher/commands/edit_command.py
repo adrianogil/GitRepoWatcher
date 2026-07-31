@@ -18,7 +18,7 @@ def execute(args, extra_args, controller):
 
     extra_args = copy.deepcopy(extra_args)
 
-    if not args and "--path" not in extra_args and "-p" not in extra_args:
+    if not args and "--path" not in extra_args:
         current_repo_path = get_git_root(os.getcwd())
         if current_repo_path:
             extra_args["--path"] = current_repo_path

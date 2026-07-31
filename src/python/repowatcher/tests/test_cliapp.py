@@ -101,3 +101,29 @@ def test_run_reports_when_controller_has_no_matching_commands(monkeypatch, capsy
     CliApp(controller).run()
 
     assert capsys.readouterr().out == "Command not found\n"
+
+
+def test_run_refuses_to_dispatch_multiple_commands(monkeypatch, capsys):
+    calls = []
+
+    def execute(*args):
+        calls.append(args)
+
+    controller = _FakeController(
+        {
+            "--first": execute,
+            "--second": execute,
+        }
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["repo-watcher", "--first", "one", "--second", "two"],
+    )
+
+    CliApp(controller).run()
+
+    assert calls == []
+    assert capsys.readouterr().out == (
+        "Only one command can be specified: --first, --second\n"
+    )

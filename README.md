@@ -70,7 +70,7 @@ If no command is provided, the tool runs the default mode and lists registered r
 - `-l`, `--list`  
   List registered repos. You can pass filters (category, id, path).
 
-- `-lc`, `--list`  
+- `-lc`, `--list-categories`
   List categories.
 
 - `-d`, `--delete`  
@@ -86,7 +86,7 @@ If no command is provided, the tool runs the default mode and lists registered r
 - `-u`, `--update`  
   Run each repo's update command.
 
-- `-up`  
+- `-up`, `--move-head`
   Move HEAD to upstream when safe (no local unstaged changes / divergence constraints).
 
 - `-p`, `--push`  
@@ -133,7 +133,7 @@ Many commands accept filters after the command arguments:
 - Category name
 - Repo path
 - `-cs <category...>` to add category filters
-- `--path <path>` or `-p <path>` to filter by path
+- `--path <path>` to filter by path
 - `--all` to disable filtering
 
 ## Contributing

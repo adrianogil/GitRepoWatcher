@@ -8,7 +8,7 @@ import repowatcher.utils as utils
 import repowatcher.commands.list_repos_command as list_repos_command
 from repowatcher.commands.available_commands import get_available_commands
 
-from repowatcher.utils.cliapp import CliController
+from repowatcher.utils.cliapp import CliController, RESERVED_OPTION_FLAGS
 
 import subprocess
 import sqlite3
@@ -60,6 +60,10 @@ class GitRepoController(CliController):
         for cmd in self.available_commands:
             cmd_flags = cmd.get_cmd_flags()
             for flag in cmd_flags:
+                if flag in RESERVED_OPTION_FLAGS:
+                    raise ValueError("Command flag conflicts with option flag: " + flag)
+                if flag in commands_parse:
+                    raise ValueError("Duplicate command flag: " + flag)
                 commands_parse[flag] = cmd.execute
 
         return commands_parse
@@ -151,8 +155,6 @@ class GitRepoController(CliController):
 
         if "--path" in extra_args:
             search_conditions['path'] = extra_args["--path"]
-        if "-p" in extra_args:
-            search_conditions['path'] = extra_args["-p"]
 
         # if not 'path' in search_conditions:
         #     search_conditions['path'] = gitcommands.get_git_root(os.getcwd())

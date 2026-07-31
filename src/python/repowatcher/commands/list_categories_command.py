@@ -1,10 +1,10 @@
 
 def get_cmd_flags():
-    return ["-lc", "--list"]
+    return ["-lc", "--list-categories"]
 
 
 def get_help_usage_str():
-    return "\trepo-watcher -lc: list categories"
+    return "\trepo-watcher -lc, --list-categories: list categories"
 
 
 def execute(args, extra_args, controller):

@@ -1,11 +1,11 @@
 
 
 def get_cmd_flags():
-    return ["-up", "--update"]
+    return ["-up", "--move-head"]
 
 
 def get_help_usage_str():
-    return "\trepo-watcher -up : for each target repo fetch new commits and move head (in case there is no changes) \n"
+    return "\trepo-watcher -up, --move-head: fetch new commits and move HEAD when safe\n"
 
 
 def execute(args, extra_args, controller):
