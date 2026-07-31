@@ -7,35 +7,98 @@ class RepoDAO:
         self.cursor = cursor
         self.entity_factory = entity_factory
         self.categoryDAO = categoryDAO
+        self.conn.execute("PRAGMA foreign_keys = ON")
 
     def create_tables(self):
+        try:
+            self.cursor.execute('''
+                CREATE TABLE IF NOT EXISTS RepoWatcher (
+                    id_repo INTEGER PRIMARY KEY,
+                    repo_name TEXT NOT NULL,
+                    repo_path TEXT NOT NULL,
+                    update_command TEXT NOT NULL,
+                    operation_time TEXT NOT NULL
+                )
+            ''')
+            self._remove_orphaned_repo_categories()
+            self._deduplicate_repo_paths()
+            self.cursor.execute('''
+                CREATE UNIQUE INDEX IF NOT EXISTS
+                idx_repowatcher_repo_path_unique
+                ON RepoWatcher (repo_path)
+            ''')
+            self.conn.commit()
+        except Exception:
+            self.conn.rollback()
+            raise
+
+    def _table_exists(self, table_name):
+        self.cursor.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+            (table_name,),
+        )
+        return self.cursor.fetchone() is not None
+
+    def _remove_orphaned_repo_categories(self):
+        if not self._table_exists("RepoCategories"):
+            return
+
         self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS RepoWatcher (
-                id_repo INTEGER,
-                repo_name TEXT,
-                repo_path TEXT,
-                update_command TEXT,
-                operation_time TEXT,
-                PRIMARY KEY (id_repo)
-            )
+            DELETE FROM RepoCategories
+            WHERE id_repo NOT IN (SELECT id_repo FROM RepoWatcher)
         ''')
 
+    def _deduplicate_repo_paths(self):
+        self.cursor.execute('''
+            SELECT repo_path, MIN(id_repo)
+            FROM RepoWatcher
+            WHERE repo_path IS NOT NULL
+            GROUP BY repo_path
+            HAVING COUNT(*) > 1
+        ''')
+        duplicate_paths = self.cursor.fetchall()
+        has_repo_categories = self._table_exists("RepoCategories")
+
+        for repo_path, retained_repo_id in duplicate_paths:
+            self.cursor.execute(
+                "SELECT id_repo FROM RepoWatcher WHERE repo_path = ? AND id_repo != ?",
+                (repo_path, retained_repo_id),
+            )
+            duplicate_repo_ids = [row[0] for row in self.cursor.fetchall()]
+
+            for duplicate_repo_id in duplicate_repo_ids:
+                if has_repo_categories:
+                    self.cursor.execute(
+                        "UPDATE OR IGNORE RepoCategories SET id_repo = ? WHERE id_repo = ?",
+                        (retained_repo_id, duplicate_repo_id),
+                    )
+                    self.cursor.execute(
+                        "DELETE FROM RepoCategories WHERE id_repo = ?",
+                        (duplicate_repo_id,),
+                    )
+                self.cursor.execute(
+                    "DELETE FROM RepoWatcher WHERE id_repo = ?",
+                    (duplicate_repo_id,),
+                )
+
     def save(self, repo):
-        # Save current register
         sql_query_save = "INSERT INTO RepoWatcher " + \
                             "(repo_name, repo_path, update_command, operation_time)" + \
-                            " VALUES (:repo_name, :repo_path, :update_command, :operation_time)"
+                            " VALUES (?, ?, ?, ?)"
         save_data = repo.get_data_tuple(True)
         printlog("repodao - save - " + str(save_data), debug=True)
-        self.cursor.execute(sql_query_save, save_data)
-        self.conn.commit()
+        original_repo_id = repo.id
 
-        repo_obj = self.reload(repo)
-        repo.id = repo_obj.id
-
-        self.categoryDAO.update_from(repo)
-
-        return repo
+        try:
+            self.cursor.execute(sql_query_save, save_data)
+            repo.id = self.cursor.lastrowid
+            self.categoryDAO.update_from(repo, commit=False)
+            self.conn.commit()
+            return repo
+        except Exception:
+            self.conn.rollback()
+            repo.id = original_repo_id
+            raise
 
     def add_condition(self, query_conditions, condition, add_mode=' ADD '):
         if query_conditions == '':
@@ -109,7 +172,6 @@ class RepoDAO:
     def get_from_time(self, operation_time):
         sql_query_load_id = "SELECT * FROM RepoWatcher WHERE operation_time = ?"
         self.cursor.execute(sql_query_load_id, (operation_time,))
-        self.conn.commit()
 
         row = self.cursor.fetchone()
         if row is None:
@@ -123,7 +185,6 @@ class RepoDAO:
                         " WHERE operation_time = ? " + \
                         " AND repo_path LIKE ? "
         self.cursor.execute(sql_query_load_id, (repo.get_register_dt(), repo.path))
-        self.conn.commit()
 
         row = self.cursor.fetchone()
         if row is None:
@@ -152,7 +213,6 @@ class RepoDAO:
         return repo
 
     def update(self, repo):
-
         sql_query_update = "UPDATE RepoWatcher SET " + \
                             " repo_name = ?, " + \
                             " repo_path = ?, " + \
@@ -161,15 +221,22 @@ class RepoDAO:
                             " WHERE id_repo = ? "
         update_data = repo.get_data_tuple(True) + (repo.id,)
         printlog("repodao - save - " + str(update_data), debug=True)
-        self.cursor.execute(sql_query_update, update_data)
-        self.conn.commit()
 
-        self.categoryDAO.update_from(repo)
-
-        return repo
+        try:
+            self.cursor.execute(sql_query_update, update_data)
+            self.categoryDAO.update_from(repo, commit=False)
+            self.conn.commit()
+            return repo
+        except Exception:
+            self.conn.rollback()
+            raise
 
     def delete(self, repo):
         sql_query_delete = "DELETE FROM RepoWatcher WHERE id_repo=? "
         delete_data = (repo.id,)
-        self.cursor.execute(sql_query_delete, delete_data)
-        self.conn.commit()
+        try:
+            self.cursor.execute(sql_query_delete, delete_data)
+            self.conn.commit()
+        except Exception:
+            self.conn.rollback()
+            raise

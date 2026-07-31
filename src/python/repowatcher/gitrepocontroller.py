@@ -30,7 +30,9 @@ class GitRepoController(CliController):
             os.makedirs(db_directory)
 
         # Open Connection
-        conn = sqlite3.connect(db_directory + 'gitrepowatcher.sqlite');
+        conn = sqlite3.connect(os.path.join(db_directory, 'gitrepowatcher.sqlite'))
+        conn.execute("PRAGMA foreign_keys = ON")
+        self.conn = conn
 
         # Creating cursor
         c = conn.cursor()
@@ -39,8 +41,8 @@ class GitRepoController(CliController):
         self.categoryDAO = CategoryDAO(conn, c, self.entity_factory)
         self.repoDAO = RepoDAO(conn, c, self.entity_factory, self.categoryDAO)
 
-        self.categoryDAO.create_tables()
         self.repoDAO.create_tables()
+        self.categoryDAO.create_tables()
 
     def handle_no_args(self):
         print("Default mode: Update and Move HEAD to upstream\n")
