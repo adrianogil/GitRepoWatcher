@@ -54,6 +54,13 @@ class CliApp:
 
         commands_parse = self.controller.get_commands()
 
+        if not args:
+            if 'no-args' in commands_parse:
+                commands_parse['no-args']()
+            else:
+                print('Command not found')
+            return
+
         command_found = False
         for a in args:
             if a in commands_parse:
