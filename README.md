@@ -74,7 +74,8 @@ If no command is provided, the tool runs the default mode and lists registered r
   List categories.
 
 - `-d`, `--delete`  
-  Delete repos matching filters.
+  Delete repos matching filters. For safety, a filter is required unless `--all`
+  is explicitly provided.
 
 - `-e`, `--edit`  
   Edit repo categories.  
